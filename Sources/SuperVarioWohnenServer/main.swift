@@ -9,6 +9,12 @@ router.get("/") {
     next()
 }
 
+let tenantContext = TenantContext()
+
+router.get("/mieter", handler: tenantContext.getTenant)
+
+router.all("/app", middleware: StaticFileServer())
+
 #if os(OSX)
     Kitura.addHTTPServer(onPort: 2530, with: router)
 #else
