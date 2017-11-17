@@ -1,0 +1,106 @@
+//////////////////////
+////// Mieter ////////
+//////////////////////
+
+Request: /mieter GET
+	Params: Mieter ID
+	Params: Objekt ID
+
+Response: 
+[
+	{
+			id
+			first_name
+			last_name
+			address
+			postcode
+			city
+			mail
+			telefon
+			mobile
+			qrcode_data
+	}
+]
+
+Request: /mieter POST
+Request Body: 
+[
+	{
+			first_name
+			last_name
+			address
+			postcode
+			city
+			mail
+			telefon
+			mobile
+	}
+]
+Response: 
+[
+	{
+			id
+			first_name
+			last_name
+			address
+			postcode
+			city
+			mail
+			telefon
+			mobile
+			qrcode_data
+	}
+]
+
+Request: /mieter/{id} DELETE
+
+
+
+//////////////////////
+///// Aktuelles //////
+//////////////////////
+
+Request: /SB GET
+
+Response: 
+[
+	{
+			id
+			object_id
+			title
+			author
+			create_datetime
+			expire_date (optional)
+			message
+	}
+]
+
+Request: /SB POST
+Request Body: 
+[
+	{
+			object_id
+			title
+			author
+			create_datetime
+			expire_date (optional)
+			message
+	}
+]
+Response: 
+[
+	{
+			id
+			object_id
+			title
+			author
+			create_datetime
+			expire_date (optional)
+			message
+	}
+]
+
+Request: /SB/{id} DELETE
+
+
+
