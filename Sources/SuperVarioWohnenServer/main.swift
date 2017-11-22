@@ -10,8 +10,10 @@ router.get("/") {
 }
 
 let tenantContext = TenantContext()
+router.all(middleware: BodyParser())
 
 router.get("/mieter", handler: tenantContext.getTenant)
+router.post("/mieter", handler: tenantContext.postTenant)
 
 router.all("/app", middleware: StaticFileServer())
 

@@ -25,4 +25,15 @@ class TenantContext {
         response.status(.OK).send(json: JSON(array))
         next()
     }
+    
+    func postTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
+        if let json = request.body?.asJSON {
+            let tenant = Tenant.fromJson(json: json)
+            
+            // Insert into database
+            response.status(.OK).send(json: tenant.toJson())
+        }
+        response.status(.badRequest)
+        next()
+    }
 }

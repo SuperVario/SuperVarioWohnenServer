@@ -20,4 +20,17 @@ extension Tenant {
         ])
         return json
     }
+    
+    static func fromJson(json: JSON) -> Tenant {
+        return Tenant(
+            id: json["id"].intValue,
+            name: json["firstName"].stringValue,
+            lastName: json["lastName"].stringValue,
+            
+            telefon: json["tel"].stringValue,
+            mail: json["mail"].stringValue,
+            
+            qrcode: json["qrcode_data"].stringValue
+        )
+    }
 }
