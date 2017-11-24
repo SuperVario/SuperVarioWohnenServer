@@ -44,10 +44,18 @@ class TenantContext {
     
     func postTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
         if let json = request.body?.asJSON {
-            let tenant = Tenant.fromJson(json: json)
+            var tenant = Tenant.fromJson(json: json)
             
-            // Insert into database
-            response.status(.OK).send(json: tenant.toJson())
+            do {
+                let status = try connection.execute { try $0.query("INSERT INTO Tenant SET ?;", [tenant]) }
+                tenant.id = Int(status.insertedID)
+                
+                // Insert into database
+                response.status(.OK).send(json: tenant.toJson())
+                next()
+            } catch {
+                print(error)
+            }
         }
         response.status(.badRequest)
         next()
