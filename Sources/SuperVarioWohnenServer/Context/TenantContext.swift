@@ -8,21 +8,37 @@
 import Foundation
 import Kitura
 import SwiftyJSON
+import MySQL
 
 class TenantContext {
+    
+    private let connection: ConnectionPool
+    
+    init(connection: ConnectionPool) {
+        self.connection = connection
+    }
+    
     func getTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        // Input auswerten
-        
-        // Datenbank anfrage
-        let tenant = Tenant(id: 1, name: "max", lastName: "Mustermann", telefon: "0217437382", mail: "test@example.com", qrcode: "bfiwenoMPA")
-        
-        var array = [JSON]()
-        array.append(tenant.toJson())
-        array.append(tenant.toJson())
-        array.append(tenant.toJson())
-        
-        // Repsonse senden
-        response.status(.OK).send(json: JSON(array))
+        if let tenantString = request.queryParameters["tenantId"], let tenantId = Int(tenantString){
+            do {
+                let params = build((tenantId))
+                let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant WHERE id = ?;", params) }
+                if let first = tenants.first {
+                    response.status(.OK).send(json: first.toJson())
+                    next()
+                }
+            } catch {
+                print(error)
+            }
+        }
+        do {
+            let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant;") }
+            response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
+            next()
+        } catch {
+            print(error)
+        }
+        response.status(.internalServerError)
         next()
     }
     
