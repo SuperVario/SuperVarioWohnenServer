@@ -8,6 +8,32 @@ $('body').on('click', '#btn-mieter-load', e=> loadMieter());
 $('body').on('click', '#btn-SB-load', e=> loadSB());
 
 // HTTP Methoden
+
+// LOGIN
+
+function postLogin(username, psw){
+	var request = new XMLHttpRequest();
+   	request.open("POST","/login");
+   	request.setRequestHeader("Content-type","application/json");
+   	request.addEventListener('load', function(event) {
+      	if (request.status == 200) {
+        	console.info(request.responseText);
+          	var data = JSON.parse(request.responseText);
+          	hideLogin();
+          	loadAllItems(mieter);
+          	addActionButton("addMieter");
+      	} else {
+        	console.error(request.statusText, request.responseText);
+      	}
+   	});
+   	var newItem = { 
+		username: username,
+		psw: psw
+   	};
+   	request.send(JSON.stringify(newItem));
+}
+
+
 function getItem(itemCategorie, callback){
     var request = new XMLHttpRequest();
     request.open("GET", itemCategorie);
@@ -89,6 +115,25 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
    	request.send(JSON.stringify(newItem));
 }
 
+// Gets inputData from input form
+function getLoginInputData() {
+	const userName = $('#username').val();
+	const psw = $('#password').val();
+	const sha256 = new jsSHA('SHA-256', 'TEXT');
+	sha256.update(psw);
+	const shaPsw = sha256.getHash('HEX');
+	const data = {
+		username : userName,
+		password : shaPsw
+	};
+	return data;
+}
+
+//Hides the LOGIN field after succesfull login
+function hideLogin() {
+	$('#login-container').hide();
+}
+
 // Speichert die Eingabedaten des "Mieter hinzufügen" Feldes
 function getInputData() {
 	fn = $("#first_name").val();
@@ -166,6 +211,8 @@ function saveTargetId(id) {
 	deleteItemId = id;
 }
 
+//LOGIN
+$("body").on("click", "#button-login", e=> postLogin(getLoginInputData().username, getLoginInputData().password));
 // mieter hinzufügen "Mieter anlegen" button
 $("body").on("click", "#button-addMieter", e=> showMieterInputField());
 $("body").on("click", "#btn-mieter-speichern", e=> getInputData());
