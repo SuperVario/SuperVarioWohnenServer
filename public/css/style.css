@@ -2,6 +2,18 @@ nav {
 	margin-bottom: 20px;
 }
 
+#btn-mieter-load,
+#btn-SB-load,
+#btn-forum-load { 
+	pointer-events: none;
+}
+
+#btn-mieter-load.clickable,
+#btn-SB-load.clickable,
+#btn-forum-load.clickable {
+	pointer-events: auto;
+}
+
 #login-container {
 	border: 1px solid black;
 	background-color: #d2d4d8;

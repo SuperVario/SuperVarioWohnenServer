@@ -22,6 +22,7 @@ function postLogin(username, psw){
           	hideLogin();
           	loadAllItems(mieter);
           	addActionButton("addMieter");
+          	updateNavBar();
       	} else {
         	console.error(request.statusText, request.responseText);
       	}
@@ -250,9 +251,21 @@ $('#plz').bind('keyup change', function(e) {
     }
 });
 
+// NAVBAR
+
+function updateNavBar() {
+	$('.nav-list li').each(function() {
+		$(this).removeClass('active');		
+	});
+	$('.list-item a').each(function() {
+		$(this).addClass('clickable');
+	})
+}
+
 // MIETER
 
 function loadMieter() {
+	updateNavBar();
 	clearBeforeLoad();
 	addActionButton("addMieter");
 	addRowForDynamicContent();
@@ -260,6 +273,7 @@ function loadMieter() {
 }
 
 function loadSB() {
+	updateNavBar();
 	clearBeforeLoad();
 	addActionButton("addSB");
 	addRowForDynamicContent();
