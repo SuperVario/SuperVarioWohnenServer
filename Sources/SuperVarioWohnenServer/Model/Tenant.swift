@@ -18,6 +18,7 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
     
     var qrcode: String
     
+    var objectId: Int
     
     static func decodeRow(r: QueryRowResult) throws -> Tenant {
         return try Tenant(
@@ -28,7 +29,9 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
             telefon: r <| "telefon",
             mail: r <| "mail",
             
-            qrcode: r <| "qrcode"
+            qrcode: r <| "qrcode",
+            
+            objectId : r <| "object_id"
         )
     }
     
@@ -40,7 +43,9 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
             "telefon": telefon,
             "mail": mail,
             
-            "qrcode": qrcode
+            "qrcode": qrcode,
+            
+            "object_id" : objectId
         ])
     }
 }

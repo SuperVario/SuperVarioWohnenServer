@@ -30,7 +30,9 @@ extension Tenant {
             telefon: json["tel"].stringValue,
             mail: json["mail"].stringValue,
             
-            qrcode: json["qrcode_data"].stringValue
+            qrcode: json["qrcode_data"].stringValue,
+            
+            objectId: json["objectId"].intValue
         )
     }
 }
