@@ -178,6 +178,60 @@
         </div>
       </div>
 
+      <!-- Modal Structure Mieter Bearbeiten -->
+      <div id="modal-edit-tenant" class="modal modal-container">
+        <div class="modal-content edit-tenant">
+          <h4 class="modal-edit-tenant-titel">Mieter Bearbeiter</h4>
+          <div class="row">
+            <span class="col s4">Vorname</span>
+            <span class="col s8" id="modal-edit-tenant-fn" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Nachname</span>
+            <span class="col s8" id="modal-edit-tenant-ln" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Adresse</span>
+            <span class="col s8" id="modal-edit-tenant-adr" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">PLZ</span>
+            <span class="col s8" id="modal-edit-tenant-plz" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">CITY</span>
+            <span class="col s8" id="modal-edit-tenant-city" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">EMail</span>
+            <span class="col s8" id="modal-edit-tenant-mail" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Mobil:</span>
+            <span class="col s8" id="modal-edit-tenant-mobil" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Tel Privat</span>
+            <span class="col s8" id="modal-edit-tenant-telpriv" contenteditable="true"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Abbrechen</a>
+          <a href="#modal-edit-tenant-confirmation" class="modal-action modal-close waves-effect waves-green btn-flat modal-trigger" id="btn-edit-tenant-speichern">Speichern</a>
+        </div>
+      </div>
+
+      <!-- Modal Structure // Mieter Bearbeiten bestätigung -->
+      <div id="modal-edit-tenant-confirmation" class="modal modal-container">
+        <div class="modal-content edit-tenant">
+          <h4 class="modal-edit-tenant-titel">Änderungen speichern?</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Abbrechen</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="btn-modal-edit-tenant-confirm">Speichern</a>
+        </div>
+      </div>
+
       <!-- Modal Structure // Mieter löschen -->
       <div id="modal-mieterLoeschen" class="modal modal-container">
         <div class="modal-content Mieter-loeschen">
