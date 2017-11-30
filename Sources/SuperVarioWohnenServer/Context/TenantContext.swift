@@ -35,7 +35,7 @@ class TenantContext {
                 let params = build((objectId))
                 let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant WHERE object_id = ?;", params) }
                 response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
-
+                next()
             } catch {
                 print(error)
             }

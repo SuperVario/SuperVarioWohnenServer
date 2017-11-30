@@ -23,8 +23,8 @@ struct BoardEntry: QueryRowResultType, QueryParameterDictionaryType {
             title: r <| "title",
             message: r <| "message",
             
-            createDate: r <| "create_date",
-            expireDate: r <|? "exipre_date"
+            createDate: Date(), // TODO
+            expireDate: nil
         )
     }
     

@@ -36,6 +36,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     
     let tenantContext = TenantContext(connection: pool)
     let documentContext = DocumentContext(connection: pool)
+    let boardEntryContext = BoardEntryContext(connection: pool)
     
     router.all(middleware: BodyParser())
     
@@ -45,6 +46,8 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.get("/documents", handler: documentContext.getAllDocuments)
     router.get("/documents/:id", handler: documentContext.getDocument)
     router.post("/documents", handler: documentContext.postDocument)
+    
+    router.get("/board", handler: boardEntryContext.getAllEntries)
     
     router.all("/app", middleware: StaticFileServer())
     
