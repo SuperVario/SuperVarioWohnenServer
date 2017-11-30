@@ -13,6 +13,8 @@ struct Document: QueryRowResultType, QueryParameterDictionaryType {
     
     var name: String
     var description: String
+    
+    var folder: String
     var filename: String
     
     static func decodeRow(r: QueryRowResult) throws -> Document {
@@ -20,6 +22,7 @@ struct Document: QueryRowResultType, QueryParameterDictionaryType {
             id: r <| "id",
             name: r <| "name",
             description: r <| "description",
+            folder:  r <| "folder",
             filename: r <| "filename"
         )
     }
@@ -28,6 +31,7 @@ struct Document: QueryRowResultType, QueryParameterDictionaryType {
         return QueryDictionary([
             "name": name,
             "description": description,
+            "folder": folder,
             "filename": filename
         ])
     }
