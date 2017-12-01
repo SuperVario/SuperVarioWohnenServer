@@ -17,6 +17,8 @@ struct Staff: QueryRowResultType, QueryParameterDictionaryType {
     var username: String
     var password: String
     
+    var session: String?
+    
     var telefon: String
     var mail: String
     
@@ -29,6 +31,7 @@ struct Staff: QueryRowResultType, QueryParameterDictionaryType {
             
             username: r <| "username",
             password: r <| "password",
+            session: r <|? "session",
             
             telefon: r <| "telefon",
             mail: ""
@@ -42,6 +45,7 @@ struct Staff: QueryRowResultType, QueryParameterDictionaryType {
             
             "uswername": username,
             "password": password,
+            "session": session,
             
             "telefon": telefon,
             "mail": mail
