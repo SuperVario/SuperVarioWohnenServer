@@ -34,11 +34,14 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
         next()
     }
     
+    let loginContext = LoginContext(connection: pool)
     let tenantContext = TenantContext(connection: pool)
     let documentContext = DocumentContext(connection: pool)
     let boardEntryContext = BoardEntryContext(connection: pool)
     
     router.all(middleware: BodyParser())
+    
+    router.post("/login", handler: loginContext.login)
     
     router.get("/mieter", handler: tenantContext.getTenant)
     router.post("/mieter", handler: tenantContext.postTenant)

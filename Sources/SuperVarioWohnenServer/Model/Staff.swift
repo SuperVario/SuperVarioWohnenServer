@@ -14,6 +14,7 @@ struct Staff: QueryRowResultType, QueryParameterDictionaryType {
     var name: String
     var lastName: String
     
+    var username: String
     var password: String
     
     var telefon: String
@@ -22,13 +23,15 @@ struct Staff: QueryRowResultType, QueryParameterDictionaryType {
     static func decodeRow(r: QueryRowResult) throws -> Staff {
         return try Staff(
             id: r <| "id",
+            
             name: r <| "name",
             lastName: r <| "last_name",
             
+            username: r <| "username",
             password: r <| "password",
             
             telefon: r <| "telefon",
-            mail: r <| "mail"
+            mail: ""
         )
     }
     
@@ -37,6 +40,7 @@ struct Staff: QueryRowResultType, QueryParameterDictionaryType {
             "name": name,
             "last_name": lastName,
             
+            "uswername": username,
             "password": password,
             
             "telefon": telefon,
