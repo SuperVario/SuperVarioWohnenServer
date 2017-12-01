@@ -19,37 +19,43 @@ class TenantContext {
     }
     
     func getTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        if let tenantString = request.queryParameters["tenantId"], let tenantId = Int(tenantString) {
-            do {
-                let params = build((tenantId))
-                let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant WHERE id = ?;", params) }
-                if let first = tenants.first {
-                    response.status(.OK).send(json: first.toJson())
-                    next()
+        if let session = request.headers["session"], let staffOpt = try? Staff.getStaffBySession(session: session, connection: connection), let staff = staffOpt {
+            if let tenantString = request.queryParameters["tenantId"], let tenantId = Int(tenantString) {
+                do {
+                    let params = build((staff.session, tenantId))
+                    let tenants: [Tenant] = try connection.execute { try $0.query("SELECT t.* FROM Tenant t JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE s.session = ? AND t.id = ?;", params) }
+                    if let first = tenants.first {
+                        response.status(.OK).send(json: first.toJson())
+                        next()
+                    }
+                } catch {
+                    print(error)
                 }
-            } catch {
-                print(error)
+            } else if let objectString = request.queryParameters["objectId"], let objectId = Int(objectString) {
+                do {
+                    let params = build((staff.session, objectId))
+                    let tenants: [Tenant] = try connection.execute { try $0.query("SELECT t.* FROM Tenant t JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE s.session = ? AND o.id = ?;", params) }
+                    response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
+                    next()
+                } catch {
+                    print(error)
+                }
+            } else {
+                do {
+                    let params = build((staff.session))
+                    let tenants: [Tenant] = try connection.execute { try $0.query("SELECT t.* FROM Tenant t JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE s.session = ?;", params) }
+                    response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
+                    next()
+                } catch {
+                    print(error)
+                }
             }
-        } else if let objectString = request.queryParameters["objectId"], let objectId = Int(objectString) {
-            do {
-                let params = build((objectId))
-                let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant WHERE object_id = ?;", params) }
-                response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
-                next()
-            } catch {
-                print(error)
-            }
+            response.status(.internalServerError)
+            next()
         } else {
-            do {
-                let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant;") }
-                response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
-                next()
-            } catch {
-                print(error)
-            }
+            response.status(.unauthorized)
+            next()
         }
-        response.status(.internalServerError)
-        next()
     }
     
     func postTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {

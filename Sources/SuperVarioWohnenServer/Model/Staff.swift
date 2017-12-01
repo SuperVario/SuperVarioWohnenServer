@@ -52,3 +52,14 @@ struct Staff: QueryRowResultType, QueryParameterDictionaryType {
         ])
     }
 }
+
+extension Staff {
+    static func getStaffBySession(session: String, connection: ConnectionPool) throws -> Staff? {
+        let params = build((session))
+        let staff: [Staff] = try connection.execute { try $0.query("SELECT * FROM Staff WHERE session = ?;", params) }
+        if let first = staff.first {
+            return first
+        }
+        return nil
+    }
+}
