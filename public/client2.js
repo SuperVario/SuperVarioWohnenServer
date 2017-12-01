@@ -473,17 +473,18 @@ function addMieterToList(data) {
     const footer = document.createElement("div");
 	footer.className = "card-action";
 
-    const a2 = document.createElement("a");
+    var a1 = document.createElement("a");
+    a1.className = "delete-mieter-button modal-trigger";
+    a1.setAttribute("href", "#modal-mieterLoeschen");
+    a1.setAttribute("item-id", data.id);
+    a1.innerText = "Löschen";
+
+    var a2 = document.createElement("a");
     a2.className = "edit-tenant-button modal-trigger";
     a2.setAttribute("href", "#modal-edit-tenant");
     a2.setAttribute('onClick', "getTenantData()");
     a2.setAttribute("item-id", data.id);
     a2.innerText = "Bearbeiten";
-
-    const a2 = document.createElement("a");
-	a2.className = "edit-mieter-button";
-	a2.setAttribute("href", "#");
-	a2.innerText = "Bearbeiten";
 
 	footer.appendChild(a1);
 	footer.appendChild(a2);
