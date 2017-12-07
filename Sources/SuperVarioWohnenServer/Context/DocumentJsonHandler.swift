@@ -13,8 +13,7 @@ extension Document {
         let json = JSON([
             "id": id,
             "name": name,
-            "description": description,
-            "folder": folder,
+            "folder": folder
             ])
         return json
     }

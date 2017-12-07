@@ -6,7 +6,7 @@ import SwiftyJSON
 let fileManager = FileManager.default
 let path = fileManager.currentDirectoryPath.appending("/settings.json")
 if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
-    class SqlSettings: ConnectionOption {
+    class Settings: ConnectionOption {
         init(data: Data) {
             let settingsJson = JSON(data: data)
 
@@ -15,6 +15,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
             user = settingsJson["user"].stringValue
             password = settingsJson["password"].stringValue
             database = settingsJson["database"].stringValue
+            uploadPath = settingsJson["uploadPath"].stringValue
         }
         
         let host: String
@@ -22,9 +23,11 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
         let user: String
         let password: String
         let database: String
+        let uploadPath: String
     }
     
-    let pool = ConnectionPool(options: SqlSettings(data: data))
+    let settings = Settings(data: data)
+    let pool = ConnectionPool(options: settings)
     
     let router = Router()
     
@@ -36,8 +39,9 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     
     let loginContext = LoginContext(connection: pool)
     let tenantContext = TenantContext(connection: pool)
-    let documentContext = DocumentContext(connection: pool)
+    let documentContext = DocumentContext(connection: pool, uploadPath: settings.uploadPath)
     let boardEntryContext = BoardEntryContext(connection: pool)
+    let uploadContext = UploadContext(uploadPath: settings.uploadPath)
     
     router.all(middleware: BodyParser())
     
@@ -51,6 +55,8 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.post("/documents", handler: documentContext.postDocument)
     
     router.get("/board", handler: boardEntryContext.getAllEntries)
+    
+    router.post("/upload", handler: uploadContext.uploadFile)
     
     router.all("/app", middleware: StaticFileServer())
     

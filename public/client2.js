@@ -12,13 +12,14 @@ $('body').on('click', '#btn-SB-load', e=> loadSB());
 // LOGIN
 
 function postLogin(username, psw){
+    console.log(psw);
 	var request = new XMLHttpRequest();
    	request.open("POST","/login");
    	request.setRequestHeader("Content-type","application/json");
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
-          	var data = JSON.parse(request.responseText);
+          	var data = request.responseText;
           	hideLogin();
           	loadAllItems(mieter);
           	addActionButton("addMieter");

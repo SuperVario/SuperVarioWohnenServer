@@ -10,29 +10,29 @@ import MySQL
 
 struct Document: QueryRowResultType, QueryParameterDictionaryType {
     var id: Int
+    var documentId: String
+    
+    var tenantId: Int
     
     var name: String
-    var description: String
-    
     var folder: String
-    var filename: String
     
     static func decodeRow(r: QueryRowResult) throws -> Document {
         return try Document(
             id: r <| "id",
+            documentId: r <| "document_id",
+            tenantId: r <| "tenant_id",
             name: r <| "name",
-            description: r <| "description",
-            folder:  r <| "folder",
-            filename: r <| "filename"
+            folder:  r <| "folder"
         )
     }
     
     func queryParameter() throws -> QueryDictionary {
         return QueryDictionary([
             "name": name,
-            "description": description,
-            "folder": folder,
-            "filename": filename
+            "document_id": documentId,
+            "tenant_id": tenantId,
+            "folder": folder
         ])
     }
 }

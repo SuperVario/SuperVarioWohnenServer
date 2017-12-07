@@ -12,10 +12,12 @@ import MySQL
 
 class DocumentContext {
     
-    let connection: ConnectionPool
+    private let connection: ConnectionPool
+    private let uploadPath: String
     
-    init(connection: ConnectionPool) {
+    init(connection: ConnectionPool, uploadPath: String) {
         self.connection = connection
+        self.uploadPath = uploadPath
     }
     
     func getAllDocuments(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
@@ -58,9 +60,8 @@ class DocumentContext {
                     
                     let acceptType = request.headers["Accept-Type"]
                     if let acceptType = acceptType, acceptType == "application/pdf" {
-                        let fileManager = FileManager.default
-                        let path = fileManager.currentDirectoryPath.appending(first.filename)
-                        if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
+                        let url = URL(fileURLWithPath: "\(uploadPath)/\(first.documentId)")
+                        if let data = try? Data(contentsOf: url) {
                             response.status(.OK).send(data: data)
                         } else {
                             response.status(.internalServerError)
@@ -83,13 +84,35 @@ class DocumentContext {
     }
     
     func postDocument(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        // TODO Management Auth
-        if let body = request.body?.asMultiPart {
-            for part in body {
-                print(part)
+        if let json = request.body?.asJSON {
+            guard let tenantId = json["tenantId"].int,
+                    let documentId = json["documentId"].string,
+                    let documentName = json["name"].string,
+                    let folder = json["folder"].string else {
+                response.status(.badRequest)
+                next()
+                return
+            }
+        
+            var document = Document(id: -1, documentId: documentId, tenantId: tenantId, name: documentName, folder: folder)
+            
+            do {
+                let status = try connection.execute { try $0.query("INSERT INTO Document SET ?;", [document]) }
+                document.id = Int(status.insertedID)
+                
+                // Insert into database
+                response.status(.OK).send(json: document.toJson())
+                next()
+            } catch QueryError.queryExecutionError(let message, _) {
+                print("SQL Error: \(message)")
+                response.status(.badRequest).send(message)
+                next()
+                return
+            } catch {
+                print(error)
             }
         }
-        response.status(.OK)
+        response.status(.badRequest)
         next()
     }
 }
