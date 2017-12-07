@@ -16,7 +16,11 @@ extension String {
         var randomString = ""
         
         for _ in 0 ..< length {
-            let rand = arc4random_uniform(len)
+            #if os(OSX)
+                let rand = arc4random_uniform(len)
+            #else
+                let rand = random(len)
+            #endif
             var nextChar = letters.character(at: Int(rand))
             randomString += NSString(characters: &nextChar, length: 1) as String
         }

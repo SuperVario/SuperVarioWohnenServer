@@ -71,6 +71,8 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     #if os(OSX)
         Kitura.addHTTPServer(onPort: 2530, with: router)
     #else
+        srandom(UInt32(time(nil)))
+        
         let path = CommandLine.arguments[1]
         let certFile = "\(path)/cert.pem"
         let keyFile = "\(path)/privkey.pem"
