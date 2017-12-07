@@ -19,7 +19,7 @@ class TenantContext {
     }
     
     func getTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        if let session = request.headers["session"], let staffOpt = try? Staff.getStaffBySession(session: session, connection: connection), let staff = staffOpt {
+        if let session = request.headers["session"], let staff = Staff.getStaffBySession(session: session, connection: connection) {
             if let tenantString = request.queryParameters["tenantId"], let tenantId = Int(tenantString) {
                 do {
                     let params = build((staff.session, tenantId))
@@ -59,24 +59,29 @@ class TenantContext {
     }
     
     func postTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        if let json = request.body?.asJSON {
-            var tenant = Tenant.fromJson(json: json)
-            do {
-                let status = try connection.execute { try $0.query("INSERT INTO Tenant SET ?;", [tenant]) }
-                tenant.id = Int(status.insertedID)
-            
-                // Insert into database
-                response.status(.OK).send(json: tenant.toJson())
-                next()
-            } catch QueryError.queryExecutionError(let message, _) {
-                print("SQL Error: \(message)")
-                response.status(.badRequest).send(message)
-                next()
-            } catch {
-                print(error)
+        if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
+            if let json = request.body?.asJSON {
+                var tenant = Tenant.fromJson(json: json)
+                do {
+                    let status = try connection.execute { try $0.query("INSERT INTO Tenant SET ?;", [tenant]) }
+                    tenant.id = Int(status.insertedID)
+                
+                    // Insert into database
+                    response.status(.OK).send(json: tenant.toJson())
+                    next()
+                } catch QueryError.queryExecutionError(let message, _) {
+                    print("SQL Error: \(message)")
+                    response.status(.badRequest).send(message)
+                    next()
+                } catch {
+                    print(error)
+                }
             }
+            response.status(.badRequest)
+            next()
+        } else {
+            response.status(.unauthorized)
+            next()
         }
-        response.status(.badRequest)
-        next()
     }
 }

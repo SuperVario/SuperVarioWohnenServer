@@ -51,11 +51,15 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
 }
 
 extension Tenant {
-    static func getTentantByCode(code: String, connection: ConnectionPool) throws -> Tenant? {
-        let params = build((code))
-        let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant WHERE qrcode = ?;", params) }
-        if let first = tenants.first {
-            return first
+    static func getTentantByCode(code: String, connection: ConnectionPool) -> Tenant? {
+        do {
+            let params = build((code))
+            let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant WHERE qrcode = ?;", params) }
+            if let first = tenants.first {
+                return first
+            }
+        } catch {
+            print("error while fetching tenant by code: \(error)")
         }
         return nil
     }
