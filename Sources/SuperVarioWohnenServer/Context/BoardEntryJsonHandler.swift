@@ -23,13 +23,16 @@ extension BoardEntry {
     }
     
     static func fromJson(json: JSON) -> BoardEntry {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        
         return BoardEntry(
             id: json["id"].intValue,
             title: json["title"].stringValue,
             message: json["message"].stringValue,
             
-            createDate: Date(), // TODO
-            expireDate: nil,
+            createDate: dateFormatter.date(from: json["createDate"].stringValue) ?? Date(),
+            expireDate: dateFormatter.date(from: json["expireDate"].stringValue) ?? nil,
             
             objectId: json["objectId"].intValue
         )

@@ -63,4 +63,17 @@ extension Tenant {
         }
         return nil
     }
+    
+    static func getById(id: Int, connection: ConnectionPool) -> Tenant? {
+        do {
+            let params = build((id))
+            let tenants: [Tenant] = try connection.execute { try $0.query("SELECT * FROM Tenant WHERE id = ?;", params) }
+            if let first = tenants.first {
+                return first
+            }
+        } catch {
+            print("error while fetching tenant by code: \(error)")
+        }
+        return nil
+    }
 }
