@@ -3,6 +3,8 @@ import Foundation
 import MySQL
 import SwiftyJSON
 
+print(String.randomString(length: 100))
+
 let fileManager = FileManager.default
 let path = fileManager.currentDirectoryPath.appending("/settings.json")
 if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
