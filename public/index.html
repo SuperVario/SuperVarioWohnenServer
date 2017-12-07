@@ -7,7 +7,8 @@
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
       <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
-      <link rel="stylesheet" type="text/css" href="css/style.css">      
+      <link rel="stylesheet" type="text/css" href="css/style.css"> 
+      <script type="text/javascript" src="sha256.js"></script>     
     </head>
 
     <body>
@@ -19,17 +20,62 @@
           <ul class="right hide-on-small-and-down nav-list">
             <li class="list-item"><a id='btn-mieter-load'>Mieter</a>  </li>
             <li class="list-item"><a id='btn-SB-load'>Schwarzes Brett</a></li>
-            <li class="list-item"><a id="btn-mieter-load" href="#">Forum</a></li>
+            <li class="list-item"><a id="btn-forum-load">Forum</a></li>
           </ul>
           <ul class="side-nav nav-list" id="mobile-demo">
             <li class="list-item"><a id='btn-mieter-load'>Mieter</a></li>
             <li class="list-item"><a id='btn-SB-load'>Schwarzes Brett</a></li>
-            <li class="list-item"><a href="#">Forum</a></li>
+            <li class="list-item"><a id="btn-forum-load">Forum</a></li>
           </ul>
         </div>
       </nav>
 
       <main>
+
+        // Just used as a test sample for file upload
+        <form ref='uploadForm'
+              id='uploadForm'
+              action='http://localhost:2530/upload'
+              method='post'
+              encType="multipart/form-data">
+          <input type="file" name="sampleFile" />
+          <input type='submit' value='Upload!' />
+        </form>
+
+
+        <div class="container" id='login-container'>
+          <div class="row">
+            <div class="col s12 push-s3">
+              <h3>Login</h3>
+            </div>
+            <div class="col s6 push-s3">
+              <input type="hidden"/>
+              <div class="row">
+                <div class="input-field col s12">
+                    <input id="username" name="username" type="text" class="validate">
+                    <label for="username">Nutzername</label>
+                </div>
+                <div class="input-field col s12">
+                  <input id="password" name="password" type="password" class="validate">
+                  <label for="password">Password</label>
+                </div>
+                <div class="col s12">
+                  <input type="checkbox" name="remember-me" id="remember-me"/>
+                  <label for="remember-me">Angemeldet bleiben</label>
+                </div>
+              <!-- <#if error??>
+                  <span>${error}</span>
+              </#if> -->
+                <div class="input-field col s12" id="button-login-container">
+                  <button
+                    class="waves-effect waves-light btn orange accent-3 no-transform center-align"
+                    id="button-login"><i class="material-icons left">exit_to_app</i>Login
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Input section für neue Mieter, default: display:none, aktiviert bei click button add -->
         <section class="input-mieter2" id="input-container2">
@@ -140,6 +186,60 @@
         <div class="modal-footer">
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Abbrechen</a>
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="btn-modal-speichern">Speichern</a>
+        </div>
+      </div>
+
+      <!-- Modal Structure Mieter Bearbeiten -->
+      <div id="modal-edit-tenant" class="modal modal-container">
+        <div class="modal-content edit-tenant">
+          <h4 class="modal-edit-tenant-titel">Mieter Bearbeiter</h4>
+          <div class="row">
+            <span class="col s4">Vorname</span>
+            <span class="col s8" id="modal-edit-tenant-fn" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Nachname</span>
+            <span class="col s8" id="modal-edit-tenant-ln" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Adresse</span>
+            <span class="col s8" id="modal-edit-tenant-adr" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">PLZ</span>
+            <span class="col s8" id="modal-edit-tenant-plz" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">CITY</span>
+            <span class="col s8" id="modal-edit-tenant-city" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">EMail</span>
+            <span class="col s8" id="modal-edit-tenant-mail" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Mobil:</span>
+            <span class="col s8" id="modal-edit-tenant-mobil" contenteditable="true"></span>
+          </div>
+          <div class="row">
+            <span class="col s4">Tel Privat</span>
+            <span class="col s8" id="modal-edit-tenant-telpriv" contenteditable="true"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Abbrechen</a>
+          <a href="#modal-edit-tenant-confirmation" class="modal-action modal-close waves-effect waves-green btn-flat modal-trigger" id="btn-edit-tenant-speichern">Speichern</a>
+        </div>
+      </div>
+
+      <!-- Modal Structure // Mieter Bearbeiten bestätigung -->
+      <div id="modal-edit-tenant-confirmation" class="modal modal-container">
+        <div class="modal-content edit-tenant">
+          <h4 class="modal-edit-tenant-titel">Änderungen speichern?</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Abbrechen</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="btn-modal-edit-tenant-confirm">Speichern</a>
         </div>
       </div>
 

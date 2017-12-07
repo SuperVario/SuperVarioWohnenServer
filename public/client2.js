@@ -8,11 +8,54 @@ $('body').on('click', '#btn-mieter-load', e=> loadMieter());
 $('body').on('click', '#btn-SB-load', e=> loadSB());
 
 // HTTP Methoden
-function getItem(itemCategorie, callback){
+
+// LOGIN
+
+function postLogin(username, psw){
+    console.log(psw);
+	var request = new XMLHttpRequest();
+   	request.open("POST","/login");
+   	request.setRequestHeader("Content-type","application/json");
+   	request.addEventListener('load', function(event) {
+      	if (request.status == 200) {
+        	console.info(request.responseText);
+          	var data = request.responseText;
+          	hideLogin();
+          	loadAllItems(mieter);
+          	addActionButton("addMieter");
+          	updateNavBar();
+      	} else {
+        	console.error(request.statusText, request.responseText);
+      	}
+   	});
+   	var newItem = { 
+		username: username,
+		psw: psw
+   	};
+   	request.send(JSON.stringify(newItem));
+}
+
+
+function getItems(itemCategorie, callback){
     var request = new XMLHttpRequest();
     request.open("GET", itemCategorie);
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status == 200) {
+            var data = JSON.parse(request.responseText);
+            console.info(data);
+            callback(data);
+        } else {
+            console.error(request.statusText, request.responseText);
+        }
+    });
+    request.send();     // wird asugeführt auch wen eventlistener noch nicht load
+}
+
+function getItem(itemCategorie, id, callback){
+    var request = new XMLHttpRequest();
+    request.open("GET", itemCategorie + "/" + id);
+    request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
+        if (request.status === 200) {
             var data = JSON.parse(request.responseText);
             console.info(data);
             callback(data);
@@ -64,6 +107,33 @@ function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrC
    	request.send(JSON.stringify(newItem));
 }
 
+function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil) {
+    var request = new XMLHttpRequest();
+    request.open("POST","/mieter/" + id);
+    request.setRequestHeader("Content-type","application/json");
+    request.addEventListener('load', function(event) {
+        if (request.status == 200) {
+            console.info(request.responseText);
+            var data = JSON.parse(request.responseText);
+            updateTenantCard(data);
+        } else {
+            console.error(request.statusText, request.responseText);
+        }
+    });
+    const newItem = {
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        adress: adress,
+        plz: plz,
+        city: city,
+        mail: mail,
+        tel: tel,
+        mobil: mobil
+    };
+    request.send(JSON.stringify(newItem));
+}
+
 function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDatumFormated, erstellZeit, verfallsDatum, nachricht){
 	var request = new XMLHttpRequest();
    	request.open("POST","/SB");
@@ -89,6 +159,25 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
    	request.send(JSON.stringify(newItem));
 }
 
+// Gets inputData from input form
+function getLoginInputData() {
+	const userName = $('#username').val();
+	const psw = $('#password').val();
+	const sha256 = new jsSHA('SHA-256', 'TEXT');
+	sha256.update(psw);
+	const shaPsw = sha256.getHash('HEX');
+	const data = {
+		username : userName,
+		password : shaPsw
+	};
+	return data;
+}
+
+//Hides the LOGIN field after succesfull login
+function hideLogin() {
+	$('#login-container').hide();
+}
+
 // Speichert die Eingabedaten des "Mieter hinzufügen" Feldes
 function getInputData() {
 	fn = $("#first_name").val();
@@ -108,6 +197,30 @@ function getInputData() {
 	$("#modal-mieter-mail").text(mail);
 	$("#modal-mieter-telpriv").text(tel);
 	$("#modal-mieter-mobil").text(mob);
+}
+
+function getEditedTenantData() {
+    fn = $("#modal-edit-tenant-fn").text();
+    ln = $("#modal-edit-tenant-ln").text();
+    adr = $("#modal-edit-tenant-adr").text();
+    plz = $("#modal-edit-tenant-plz").text();
+    city = $("#modal-edit-tenant-city").text();
+    mail = $("#modal-edit-tenant-mail").text();
+    tel = $("#modal-edit-tenant-telpriv").text();
+    mob = $("#modal-edit-tenant-mobil").text();
+}
+
+function updateTenantCard(data) {
+    const nameField = '.mieter-card-name.' + data.id;
+    const adrField = '.mieter-card-adr.' + data.id;
+    const mailField = '.mieter-card-mail.' + data.id;
+    const telField = '.mieter-card-tel.' + data.id;
+    const mobilField = '.mieter-card-mobil.' + data.id;
+    $(nameField).text(data.firstName + ' ' + data.lastName);
+    $(adrField).text(data.adress + ', ' + data.plz + ' ' + data.city);
+    $(mailField).text(data.mail);
+    $(telField).text(data.tel);
+    $(mobilField).text(data.mobil);
 }
 
 // Aufruf der HTTP POST Methode und einfügen der Daten in MieterCard zur Darstellung im HtmL
@@ -163,21 +276,28 @@ function getCurrentTime() {
 
 // Speichert die ID des HTML Elements von dem aus ein Löschaufruf gestartet wurde
 function saveTargetId(id) {
-	deleteItemId = id;
+	itemId = id;
 }
 
+//LOGIN
+$("body").on("click", "#button-login", e=> postLogin(getLoginInputData().username, getLoginInputData().password));
 // mieter hinzufügen "Mieter anlegen" button
 $("body").on("click", "#button-addMieter", e=> showMieterInputField());
 $("body").on("click", "#btn-mieter-speichern", e=> getInputData());
 $("body").on("click", "#btn-modal-speichern", e=> saveMieterAndConfirm());
+// mieter bearbeiten
+$("body").on("click", ".edit-tenant-button", e=> saveTargetId($(event.target).attr("item-id")));
+$("body").on("click", "#btn-edit-tenant-speichern", e=> getEditedTenantData());
+$("body").on("click", "#btn-modal-edit-tenant-confirm", e=> editMieter(itemId, fn, ln, adr, plz, city, mail, tel, mob));
+
 // mieter Löschen
 $("body").on("click", ".delete-mieter-button", e=> saveTargetId($(event.target).attr("item-id")));
-$("body").on("click", "#btn-modal-Mieter-loeschen", e=> deleteItem(mieter, deleteItemId));
+$("body").on("click", "#btn-modal-Mieter-loeschen", e=> deleteItem(mieter, itemId));
 // SB neue nachricht speichern
 $("body").on("click", "#button-save-schwarzesBrettNachricht", e=> saveSchwarzesBrettEntry());
 // SB Nachricht löschen
 $("body").on("click", ".delete-SBItem-button", e=> saveTargetId($(event.target).attr("item-id")));
-$("body").on("click", "#btn-modal-SBItem-loeschen", e=> deleteItem(schwarzesBrett, deleteItemId));
+$("body").on("click", "#btn-modal-SBItem-loeschen", e=> deleteItem(schwarzesBrett, itemId));
 $('.datepicker').pickadate({
 	selectMonths: true, // Creates a dropdown to control month
    	selectYears: 15, // Creates a dropdown of 15 years to control year,
@@ -203,9 +323,38 @@ $('#plz').bind('keyup change', function(e) {
     }
 });
 
+// NAVBAR
+
+function updateNavBar() {
+	$('.nav-list li').each(function() {
+		$(this).removeClass('active');		
+	});
+	$('.list-item a').each(function() {
+		$(this).addClass('clickable');
+	})
+}
+
 // MIETER
 
+
+// gets the Tenant data for the edit Tenant modal and puts it in the modal
+
+function getTenantData() {
+    const id = $(event.target).attr("item-id");
+    getItem(mieter, id, function (data) {
+        $('#modal-edit-tenant-fn').text(data.firstName);
+        $('#modal-edit-tenant-ln').text(data.lastName);
+        $('#modal-edit-tenant-adr').text(data.adress);
+        $('#modal-edit-tenant-plz').text(data.plz);
+        $('#modal-edit-tenant-plz').text(data.city);
+        $('#modal-edit-tenant-mail').text(data.mail);
+        $('#modal-edit-tenant-mobil').text(data.mobil);
+        $('#modal-edit-tenant-telpriv').text(data.tel);
+    });
+}
+
 function loadMieter() {
+	updateNavBar();
 	clearBeforeLoad();
 	addActionButton("addMieter");
 	addRowForDynamicContent();
@@ -213,6 +362,7 @@ function loadMieter() {
 }
 
 function loadSB() {
+	updateNavBar();
 	clearBeforeLoad();
 	addActionButton("addSB");
 	addRowForDynamicContent();
@@ -221,10 +371,10 @@ function loadSB() {
 
 function loadAllItems(itemCategorie) {
 	if (itemCategorie === '/mieter') {
-		getItem(itemCategorie, items => items.forEach(item => addMieterToList(item)));
+		getItems(itemCategorie, items => items.forEach(item => addMieterToList(item)));
 	}
 	if (itemCategorie === '/SB') {
-		getItem(itemCategorie, items => items.forEach(item => addSBToList(item)));
+		getItems(itemCategorie, items => items.forEach(item => addSBToList(item)));
 	}	
 }
 
@@ -281,59 +431,61 @@ function showMieterInputField() {
 // DYNAMISCHER INHALT MIETER
 function addMieterToList(data) {
 
-	var row = document.getElementById('item-list-row');
+	const row = document.getElementById('item-list-row');
 
-	var section = document.createElement("section");
+    const section = document.createElement("section");
 	section.className = "item-card-container col s12 m6 l4";
 	section.setAttribute("item-id", data.id);
 
-	var card_blue = document.createElement("div");
+    const card_blue = document.createElement("div");
 	card_blue.className = "item-card card blue-grey darken-1";
 
-	var card_content = document.createElement("div");
+    const card_content = document.createElement("div");
 	card_content.className = "item-card-content white-text";
 
-	var ul = document.createElement("ul");
+    const ul = document.createElement("ul");
 	ul.className = "item-list";
 
-	var li = document.createElement("li");
+    const li = document.createElement("li");
 	li.className = "mieter-card-name";
 	li.innerText = data.firstName + " " + data.lastName;
 	ul.appendChild(li);
 
-	var li2 = document.createElement("li");
+    const li2 = document.createElement("li");
 	li2.className = "mieter-card-adr";
 	li2.innerText = data.adress + ", " + data.plz + " " + data.city;
 	ul.appendChild(li2);
 
-	var li3 = document.createElement("li");
+    const li3 = document.createElement("li");
 	li3.className = "mieter-card-mail";
 	li3.innerText = data.mail;
 	ul.appendChild(li3);
 
-	var li4 = document.createElement("li");
+    const li4 = document.createElement("li");
 	li4.className = "mieter-card-tel";
 	li4.innerText = data.tel;
 	ul.appendChild(li4);
 
-	var li5 = document.createElement("li");
+    const li5 = document.createElement("li");
 	li5.className = "mieter-card-mobil";
 	li5.innerText = data.mobil;
 	ul.appendChild(li5);
 
-	var footer = document.createElement("div");
+    const footer = document.createElement("div");
 	footer.className = "card-action";
 
-	var a1 = document.createElement("a");
-	a1.className = "delete-mieter-button modal-trigger";
-	a1.setAttribute("href", "#modal-mieterLoeschen");
-	a1.setAttribute("item-id", data.id);
-	a1.innerText = "Löschen";
+    var a1 = document.createElement("a");
+    a1.className = "delete-mieter-button modal-trigger";
+    a1.setAttribute("href", "#modal-mieterLoeschen");
+    a1.setAttribute("item-id", data.id);
+    a1.innerText = "Löschen";
 
-	var a2 = document.createElement("a");
-	a2.className = "edit-mieter-button";
-	a2.setAttribute("href", "#");
-	a2.innerText = "Bearbeiten";
+    var a2 = document.createElement("a");
+    a2.className = "edit-tenant-button modal-trigger";
+    a2.setAttribute("href", "#modal-edit-tenant");
+    a2.setAttribute('onClick', "getTenantData()");
+    a2.setAttribute("item-id", data.id);
+    a2.innerText = "Bearbeiten";
 
 	footer.appendChild(a1);
 	footer.appendChild(a2);
