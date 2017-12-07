@@ -16,15 +16,21 @@ struct BoardEntry: QueryRowResultType, QueryParameterDictionaryType {
     var createDate: Date
     var expireDate: Date?
     
+    var objectId: Int
     
     static func decodeRow(r: QueryRowResult) throws -> BoardEntry {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+        
         return try BoardEntry(
             id: r <| "id",
             title: r <| "title",
             message: r <| "message",
+
+            createDate: dateFormatter.date(from: r <| "create_date") ?? Date(),
+            expireDate: dateFormatter.date(from: (r <|? "expire_date") ?? "") ?? nil,
             
-            createDate: Date(), // TODO
-            expireDate: nil
+            objectId: r <| "object_id"
         )
     }
     
@@ -33,8 +39,10 @@ struct BoardEntry: QueryRowResultType, QueryParameterDictionaryType {
             "title": title,
             "message": message,
             
-            "create_date": createDate,
-            "exipre_date": expireDate
+            "create_date": createDate.description,
+            "expire_date": expireDate?.description,
+            
+            "object_id": objectId
         ])
     }
 }

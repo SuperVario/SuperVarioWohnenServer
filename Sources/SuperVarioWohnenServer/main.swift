@@ -55,6 +55,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.post("/documents", handler: documentContext.postDocument)
     
     router.get("/board", handler: boardEntryContext.getAllEntries)
+    router.post("/board", handler: boardEntryContext.postBoardEntry)
     
     router.post("/upload", handler: uploadContext.uploadFile)
     

@@ -15,7 +15,8 @@ extension BoardEntry {
             "title": title,
             "message": message,
             
-            "createDate": createDate.description
+            "createDate": createDate.description,
+            "expireDate": expireDate?.description  as Any
         ])
 
         return json
@@ -26,8 +27,11 @@ extension BoardEntry {
             id: json["id"].intValue,
             title: json["title"].stringValue,
             message: json["message"].stringValue,
+            
             createDate: Date(), // TODO
-            expireDate: nil
+            expireDate: nil,
+            
+            objectId: json["objectId"].intValue
         )
     }
 }
