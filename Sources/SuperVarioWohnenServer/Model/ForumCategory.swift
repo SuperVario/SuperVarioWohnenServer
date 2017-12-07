@@ -8,13 +8,13 @@
 import Foundation
 import MySQL
 
-struct FormCategory: QueryRowResultType, QueryParameterDictionaryType {
+struct ForumCategory: QueryRowResultType, QueryParameterDictionaryType {
     var id: Int
     var name: String
     
     
-    static func decodeRow(r: QueryRowResult) throws -> FormCategory {
-        return try FormCategory(
+    static func decodeRow(r: QueryRowResult) throws -> ForumCategory {
+        return try ForumCategory(
             id: r <| "id",
             name: r <| "name"
         )
