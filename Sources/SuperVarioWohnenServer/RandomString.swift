@@ -19,7 +19,7 @@ extension String {
             #if os(OSX)
                 let rand = arc4random_uniform(len)
             #else
-                let rand = random() % len
+                let rand = Int(random()) % len
             #endif
             var nextChar = letters.character(at: Int(rand))
             randomString += NSString(characters: &nextChar, length: 1) as String
