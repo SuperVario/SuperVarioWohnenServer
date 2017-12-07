@@ -54,14 +54,18 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     
     router.get("/tenant", handler: tenantContext.getTenant)
     router.post("/tenant", handler: tenantContext.postTenant)
-    router.put("/tenant", handler: tenantContext.postTenant)
+    router.put("/tenant/:id", handler: tenantContext.putTenant)
+    router.delete("/tenant/:id", handler: tenantContext.deleteTenant)
     
     router.get("/documents", handler: documentContext.getAllDocuments)
     router.get("/documents/:id", handler: documentContext.getDocument)
     router.post("/documents", handler: documentContext.postDocument)
+    router.delete("/documents", handler: documentContext.deleteDocument)
     
     router.get("/board", handler: boardEntryContext.getAllEntries)
     router.post("/board", handler: boardEntryContext.postBoardEntry)
+    router.put("/board/:id", handler: boardEntryContext.putBoardEntry)
+    router.delete("/board/:id", handler: boardEntryContext.deleteBoardEntry)
     
     router.post("/upload", handler: uploadContext.uploadFile)
     

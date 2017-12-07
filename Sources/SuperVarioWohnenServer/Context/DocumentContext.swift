@@ -127,4 +127,29 @@ class DocumentContext {
             next()
         }
     }
+    
+    func deleteDocument(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
+        if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
+            if let id = Int(request.parameters["id"] ?? "") {
+                do {
+                    let params = build((id))
+                    _ = try connection.execute { try $0.query("DELETE FROM Document WHERE id = ?;", params) }
+                    
+                    response.status(.OK)
+                    next()
+                } catch QueryError.queryExecutionError(let message, _) {
+                    print("SQL Error: \(message)")
+                    response.status(.badRequest).send(message)
+                    next()
+                } catch {
+                    print(error)
+                }
+            }
+            response.status(.badRequest)
+            next()
+        } else {
+            response.status(.unauthorized)
+            next()
+        }
+    }
 }

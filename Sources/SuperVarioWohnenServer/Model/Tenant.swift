@@ -17,6 +17,7 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
     var mail: String
     
     var qrcode: String
+    var active: Bool
     
     var objectId: Int
     
@@ -30,6 +31,7 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
             mail: r <| "mail",
             
             qrcode: r <| "qrcode",
+            active: (r <| "active") == 0 ? false : true,
             
             objectId : r <| "object_id"
         )
@@ -44,6 +46,7 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
             "mail": mail,
             
             "qrcode": qrcode,
+            "active": active ? 1 : 0,
             
             "object_id" : objectId
         ])

@@ -44,6 +44,7 @@ extension Tenant {
             mail: json["mail"].stringValue,
             
             qrcode: json["qrcode_data"].stringValue,
+            active: json["active"].boolValue,
             
             objectId: json["objectId"].intValue
         )
