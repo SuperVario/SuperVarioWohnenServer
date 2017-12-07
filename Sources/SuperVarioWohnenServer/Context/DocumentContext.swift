@@ -37,14 +37,15 @@ class DocumentContext {
     }
     
     func getDocument(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        if let auth = request.headers["auth"], let tenant = Tenant.getTentantByCode(code: auth, connection: connection) {
-            guard let documentString = request.parameters["id"], let documentId = Int(documentString) else {
-                response.status(.badRequest)
-                next()
-                return
-            }
-            
-            do {
+        guard let documentString = request.parameters["id"], let documentId = Int(documentString) else {
+            response.status(.badRequest)
+            next()
+            return
+        }
+        
+        do {
+            let document: Document?
+            if let auth = request.headers["auth"], let tenant = Tenant.getTentantByCode(code: auth, connection: connection) {
                 let params = build((tenant.id, documentId))
                 let documents: [Document] = try connection.execute { try $0.query("SELECT * FROM Document WHERE tenant_id = ? AND id = ?;", params) }
                 guard let first = documents.first else {
@@ -52,27 +53,41 @@ class DocumentContext {
                     next()
                     return
                 }
-                
+                document = first
+            } else if let session = request.headers["session"], let staff = Staff.getStaffBySession(session: session, connection: connection) {
+                let params = build((documentId, staff.session))
+                let documents: [Document] = try connection.execute { try $0.query("SELECT d.* FROM Document d JOIN Tenant t ON d.tenant_id = t.id JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE d.id = ? AND s.session = ?;", params) }
+                guard let first = documents.first else {
+                    response.status(.notFound)
+                    next()
+                    return
+                }
+                document = first
+            } else {
+                response.status(.unauthorized)
+                next()
+                document = nil
+            }
+            
+            if let document = document {
                 let acceptType = request.headers["Accept-Type"]
                 if let acceptType = acceptType, acceptType == "application/pdf" {
-                    let url = URL(fileURLWithPath: "\(uploadPath)/\(first.documentId)")
+                    let url = URL(fileURLWithPath: "\(uploadPath)/\(document.documentId)")
                     if let data = try? Data(contentsOf: url) {
                         response.status(.OK).send(data: data)
                     } else {
                         response.status(.internalServerError)
                     }
                 } else {
-                    response.status(.OK).send(json: first.toJson())
+                    response.status(.OK).send(json: document.toJson())
                 }
-                next()
-                return
-            } catch {
-                print(error)
             }
-        } else {
-            response.status(.unauthorized)
             next()
+        } catch {
+            print(error)
         }
+        response.status(.internalServerError)
+        next()
     }
     
     func postDocument(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {

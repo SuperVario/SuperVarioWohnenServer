@@ -25,7 +25,7 @@ class TenantContext {
                     let params = build((staff.session, tenantId))
                     let tenants: [Tenant] = try connection.execute { try $0.query("SELECT t.* FROM Tenant t JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE s.session = ? AND t.id = ?;", params) }
                     if let first = tenants.first {
-                        response.status(.OK).send(json: first.toJson())
+                        response.status(.OK).send(json: first.toJson(connection: connection))
                         next()
                     }
                 } catch {
@@ -35,7 +35,7 @@ class TenantContext {
                 do {
                     let params = build((staff.session, objectId))
                     let tenants: [Tenant] = try connection.execute { try $0.query("SELECT t.* FROM Tenant t JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE s.session = ? AND o.id = ?;", params) }
-                    response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
+                    response.status(.OK).send(json: JSON(tenants.map {$0.toJson(connection: connection)}))
                     next()
                 } catch {
                     print(error)
@@ -44,7 +44,7 @@ class TenantContext {
                 do {
                     let params = build((staff.session))
                     let tenants: [Tenant] = try connection.execute { try $0.query("SELECT t.* FROM Tenant t JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE s.session = ?;", params) }
-                    response.status(.OK).send(json: JSON(tenants.map {$0.toJson()}))
+                    response.status(.OK).send(json: JSON(tenants.map {$0.toJson(connection: connection)}))
                     next()
                 } catch {
                     print(error)
@@ -66,8 +66,34 @@ class TenantContext {
                     let status = try connection.execute { try $0.query("INSERT INTO Tenant SET ?;", [tenant]) }
                     tenant.id = Int(status.insertedID)
                 
-                    // Insert into database
-                    response.status(.OK).send(json: tenant.toJson())
+                    response.status(.created).send(json: tenant.toJson(connection: connection))
+                    next()
+                } catch QueryError.queryExecutionError(let message, _) {
+                    print("SQL Error: \(message)")
+                    response.status(.badRequest).send(message)
+                    next()
+                } catch {
+                    print(error)
+                }
+            }
+            response.status(.badRequest)
+            next()
+        } else {
+            response.status(.unauthorized)
+            next()
+        }
+    }
+    
+    
+    func putTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
+        if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
+            if let json = request.body?.asJSON {
+                let tenant = Tenant.fromJson(json: json)
+                do {
+                    let param = build((tenant.name, tenant.lastName, tenant.telefon, tenant.mail, tenant.id))
+                    _ = try connection.execute { try $0.query("UPDATE Tenant SET name = ?, last_name = ?, telefon = ?, mail = ? WHERE id = ?;", param) }
+                    
+                    response.status(.OK)
                     next()
                 } catch QueryError.queryExecutionError(let message, _) {
                     print("SQL Error: \(message)")

@@ -15,13 +15,17 @@ struct HouseObject: QueryRowResultType, QueryParameterDictionaryType {
     var place: String
     var postcode: String
     
+    var managementId: Int
+    
     static func decodeRow(r: QueryRowResult) throws -> HouseObject {
         return try HouseObject(
             id: r <| "id",
             
             street: r <| "street",
             place: r <| "place",
-            postcode: r <| "postcode"
+            postcode: r <| "postcode",
+            
+            managementId :  r <| "management_id"
         )
     }
     
@@ -30,6 +34,7 @@ struct HouseObject: QueryRowResultType, QueryParameterDictionaryType {
             "street": street,
             "place": place,
             "postcode": postcode,
-    ])
+            "management_id": managementId
+        ])
     }
 }

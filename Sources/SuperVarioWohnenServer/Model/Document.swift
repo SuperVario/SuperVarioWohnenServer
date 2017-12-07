@@ -35,4 +35,15 @@ struct Document: QueryRowResultType, QueryParameterDictionaryType {
             "folder": folder
         ])
     }
+    
+    static func getDocuments(tenantId: Int, connection: ConnectionPool) -> [Document] {
+        do {
+            let params = build((tenantId))
+            let documents: [Document] = try connection.execute { try $0.query("SELECT * FROM Document WHERE tenant_id = ?;", params) }
+            return documents
+        } catch {
+            print(error)
+        }
+        return []
+    }
 }

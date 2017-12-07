@@ -3,8 +3,6 @@ import Foundation
 import MySQL
 import SwiftyJSON
 
-print(String.randomString(length: 100))
-
 let fileManager = FileManager.default
 let path = fileManager.currentDirectoryPath.appending("/settings.json")
 if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
@@ -40,6 +38,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     }
     
     let loginContext = LoginContext(connection: pool)
+    let objectHandler = ObjectHandler(connection: pool)
     let tenantContext = TenantContext(connection: pool)
     let documentContext = DocumentContext(connection: pool, uploadPath: settings.uploadPath)
     let boardEntryContext = BoardEntryContext(connection: pool)
@@ -50,8 +49,12 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     
     router.post("/login", handler: loginContext.login)
     
-    router.get("/mieter", handler: tenantContext.getTenant)
-    router.post("/mieter", handler: tenantContext.postTenant)
+    router.get("/object", handler: objectHandler.getObjects)
+    router.post("/object", handler: objectHandler.postObject)
+    
+    router.get("/tenant", handler: tenantContext.getTenant)
+    router.post("/tenant", handler: tenantContext.postTenant)
+    router.put("/tenant", handler: tenantContext.postTenant)
     
     router.get("/documents", handler: documentContext.getAllDocuments)
     router.get("/documents/:id", handler: documentContext.getDocument)

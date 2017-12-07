@@ -7,16 +7,29 @@
 
 import Foundation
 import SwiftyJSON
+import MySQL
 
 extension Tenant {
-    func toJson() -> JSON {
+    func toJson(connection: ConnectionPool) -> JSON {
+        let documents = Document.getDocuments(tenantId: id, connection: connection)
+        var documentJsonArray = [[String: Any]]()
+        
+        for document in documents {
+            documentJsonArray.append([
+                "id" : document.id,
+                "name" : document.name,
+                "folder": document.folder
+                ])
+        }
+        
         let json = JSON([
             "id": id,
             "firstName": name,
             "lastName": lastName,
             "tel": telefon,
             "mail": mail,
-            "qrcode_data": qrcode
+            "qrcode_data": qrcode,
+            "documents": documentJsonArray
         ])
         return json
     }
