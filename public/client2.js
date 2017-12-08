@@ -1,5 +1,5 @@
 // Übergabeparameter für HTTP Methoden
-var mieter = "/mieter";
+var mieter = "/tenant";
 var schwarzesBrett = "/SB";
 var forum = "/forum";
 
@@ -82,7 +82,7 @@ function deleteItem(itemCategorie, id){
 
 function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrCodeData){
 	var request = new XMLHttpRequest();
-   	request.open("POST","/mieter");
+   	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
@@ -109,7 +109,7 @@ function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrC
 
 function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil) {
     var request = new XMLHttpRequest();
-    request.open("POST","/mieter/" + id);
+    request.open("POST","/tenant/" + id);
     request.setRequestHeader("Content-type","application/json");
     request.addEventListener('load', function(event) {
         if (request.status == 200) {
@@ -370,7 +370,7 @@ function loadSB() {
 }
 
 function loadAllItems(itemCategorie) {
-	if (itemCategorie === '/mieter') {
+	if (itemCategorie === '/tenant') {
 		getItems(itemCategorie, items => items.forEach(item => addMieterToList(item)));
 	}
 	if (itemCategorie === '/SB') {
