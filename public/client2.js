@@ -3,6 +3,9 @@ var mieter = "/tenant";
 var schwarzesBrett = "/SB";
 var forum = "/forum";
 
+// used to store UUID in case browser does not support sessionStorage
+let sessionID = "";
+
 // onClick Funktionalität der Menü Leiste
 $('body').on('click', '#btn-mieter-load', e=> loadMieter());
 $('body').on('click', '#btn-SB-load', e=> loadSB());
@@ -18,8 +21,11 @@ function postLogin(username, psw){
    	request.setRequestHeader("Content-type","application/json");
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
-        	console.info(request.responseText);
-          	var data = request.responseText;
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem("sessionID", request.responseText);
+            } else {
+                sessionID = request.responseText;
+            }
           	hideLogin();
           	loadAllItems(mieter);
           	addActionButton("addMieter");
