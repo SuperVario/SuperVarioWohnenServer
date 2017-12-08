@@ -44,6 +44,7 @@ function postLogin(username, psw){
 
 function getItems(itemCategorie, callback){
     var request = new XMLHttpRequest();
+    request.setRequestHeader("session",getSessionId());
     request.open("GET", itemCategorie);
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status == 200) {
@@ -60,6 +61,7 @@ function getItems(itemCategorie, callback){
 function getItem(itemCategorie, id, callback){
     var request = new XMLHttpRequest();
     request.open("GET", itemCategorie + "/" + id);
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
             var data = JSON.parse(request.responseText);
@@ -76,6 +78,7 @@ function deleteItem(itemCategorie, id){
 	var request = new XMLHttpRequest();
     $('.item-card-container').filter('[item-id='+id+']').remove();
    	request.open("DELETE", itemCategorie + "/" + id);
+    request.setRequestHeader("session",getSessionId());
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
@@ -87,9 +90,10 @@ function deleteItem(itemCategorie, id){
 }
 
 function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrCodeData){
-	var request = new XMLHttpRequest();
+	var request = new XMLHttpRequest();    r
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
+    request.setRequestHeader("session",getSessionId());
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
@@ -117,6 +121,7 @@ function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil
     var request = new XMLHttpRequest();
     request.open("POST","/tenant/" + id);
     request.setRequestHeader("Content-type","application/json");
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
         if (request.status == 200) {
             console.info(request.responseText);
@@ -144,7 +149,8 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
 	var request = new XMLHttpRequest();
    	request.open("POST","/SB");
    	request.setRequestHeader("Content-type","application/json");
-   	request.addEventListener('load', function(event) {
+    request.setRequestHeader("session",getSessionId());
+    request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
           	var data = JSON.parse(request.responseText);
@@ -567,6 +573,14 @@ function addSBToList(data) {
 	section.appendChild(card_blue);
 
 	row.appendChild(section);
+}
+
+function getSessionId() {
+    if(typeof(Storage) !== "undefined") {
+        return localStorage.getItem("UUID");
+    } else {
+        return sessionID;
+    }
 }
 
 $( document ).ready(function(){
