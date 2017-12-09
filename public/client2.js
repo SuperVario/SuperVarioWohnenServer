@@ -190,13 +190,13 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
 
 function getForumItemsByCategory(categoryId) {
     var request = new XMLHttpRequest();
-    request.setRequestHeader("session",getSessionId());
     request.open("GET", "forum/" + categoryId);
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
             var data = JSON.parse(request.responseText);
             console.info(data);
-            callback(data);
+            data.forEach(addForumItemToList);
         } else {
             console.error(request.statusText, request.responseText);
         }
@@ -421,7 +421,6 @@ function loadForum() {
     addActionButton("addForum");
     addForumCategoryNavigation();
     addRowForDynamicContent();
-    //loadAllItems(forum);
 }
 
 function loadAllItems(itemCategorie) {
@@ -631,6 +630,7 @@ function addSBToList(data) {
 
 // DYNAMISCHER INHALT FORUM
 
+// adds a navigation bar for different forum categories
 function addForumCategoryNavigation() {
     const navBar = `<nav id="drawer" class="nav">
           <ul class="nav__list">
@@ -641,6 +641,71 @@ function addForumCategoryNavigation() {
           </ul>
         </nav>`
     document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
+}
+
+// writes the forum items into the HTML
+function addForumItemToList() {
+
+    let row = document.getElementById('item-list-row');
+
+    var section = document.createElement("section");
+    section.className = "item-card-container col s12";
+    section.setAttribute("item-id", data.id);
+
+    var card_blue = document.createElement("div");
+    card_blue.className = "SBItem-card card blue-grey darken-1";
+
+    var card_content = document.createElement("div");
+    card_content.className = "card-content SB white-text";
+    card_content.setAttribute("id", "card-content-SB");
+
+    var ul = document.createElement("ul");
+    ul.className = "SB-list-content";
+
+    var li = document.createElement("li");
+    li.className = "SB-header";
+
+    var span1 = document.createElement("span");
+    span1.className = "SB-card-title";
+    span1.innerText = data.titel;
+    li.appendChild(span1);
+
+    var span2 = document.createElement("span");
+    span2.className = "SB-card-verfasser";
+    span2.innerText = data.verfasser + ", am  " + data.erstellDatumFormated + " um " + data.erstellZeit;
+    li.appendChild(span2);
+
+    ul.appendChild(li);
+
+    var li2 = document.createElement("li");
+    li2.className = "SB-card-nachricht";
+    li2.innerText = data.nachricht;
+    ul.appendChild(li2);
+
+    var footer = document.createElement("div");
+    footer.className = "card-action";
+
+    // var a1 = document.createElement("a");
+    // a1.className = "delete-SBItem-button modal-trigger";
+    // a1.setAttribute("href", "#modal-delete-SB");
+    // a1.setAttribute("item-id", data.id);
+    // a1.innerText = "Löschen";
+    //
+    // var a2 = document.createElement("a");
+    // a2.className = "edit-SBItem-button";
+    // a2.setAttribute("href", "#");
+    // a2.innerText = "Bearbeiten";
+
+    footer.appendChild(a1);
+    footer.appendChild(a2);
+
+    card_content.appendChild(ul);
+    card_blue.appendChild(card_content);
+    card_blue.appendChild(footer);
+    section.appendChild(card_blue);
+
+    row.appendChild(section);
+
 }
 
 function getSessionId() {
