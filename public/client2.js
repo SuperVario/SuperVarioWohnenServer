@@ -23,7 +23,7 @@ function postLogin(username, psw){
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
             if (typeof(Storage) !== "undefined") {
-                localStorage.setItem("sessionID", request.responseText);
+                sessionStorage.setItem("sessionID", request.responseText);
             } else {
                 sessionID = request.responseText;
             }
@@ -31,7 +31,7 @@ function postLogin(username, psw){
           	loadAllItems(mieter);
           	addActionButton("addMieter");
           	updateNavBar();
-          	getObjects(getSessionId());
+          	getObjects();
       	} else {
         	console.error(request.statusText, request.responseText);
       	}
@@ -44,14 +44,14 @@ function postLogin(username, psw){
 }
 
 // GET OBJEKT INFO
-function getObjects(sessionID) {
+function getObjects() {
     var request = new XMLHttpRequest();
     request.setRequestHeader("session",getSessionId());
     request.open("GET", "object/");
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
             var objectData = JSON.parse(request.responseText);
-            localStorage.setItem("objectData", objectData);
+            sessionStorage.setItem("objectData", objectData);
             console.error(request.statusText, request.responseText);
         }
     });
@@ -186,6 +186,22 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
 		nachricht: nachricht
    	};
    	request.send(JSON.stringify(newItem));
+}
+
+function getForumItemsByCategory(categoryId) {
+    var request = new XMLHttpRequest();
+    request.setRequestHeader("session",getSessionId());
+    request.open("GET", "forum/" + categoryId);
+    request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
+        if (request.status === 200) {
+            var data = JSON.parse(request.responseText);
+            console.info(data);
+            callback(data);
+        } else {
+            console.error(request.statusText, request.responseText);
+        }
+    });
+    request.send();
 }
 
 // Gets inputData from input form
@@ -403,7 +419,7 @@ function loadForum() {
     $('#btn-forum-load').parents().addClass('active');
     clearBeforeLoad();
     addActionButton("addForum");
-    addForumCaregoryNavigation();
+    addForumCategoryNavigation();
     addRowForDynamicContent();
     //loadAllItems(forum);
 }
@@ -615,13 +631,13 @@ function addSBToList(data) {
 
 // DYNAMISCHER INHALT FORUM
 
-function addForumCaregoryNavigation() {
+function addForumCategoryNavigation() {
     const navBar = `<nav id="drawer" class="nav">
           <ul class="nav__list">
-            <li class="nav__item"><a href="#">Neuigkeiten</a></li>
-            <li class="nav__item"><a href="#">Geplantes</a></li>
-            <li class="nav__item"><a href="#">Veranstaltungen</a></li>
-            <li class="nav__item"><a href="#">Börse</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[0].id)>News</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[1].id)>Events</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[2].id)>Culture</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[3].id)>Blog</a></li>
           </ul>
         </nav>`
     document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
@@ -629,7 +645,7 @@ function addForumCaregoryNavigation() {
 
 function getSessionId() {
     if(typeof(Storage) !== "undefined") {
-        return localStorage.getItem("sessionID");
+        return sessionStorage.getItem("sessionID");
     } else {
         return sessionID;
     }
