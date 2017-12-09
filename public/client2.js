@@ -31,6 +31,7 @@ function postLogin(username, psw){
           	loadAllItems(mieter);
           	addActionButton("addMieter");
           	updateNavBar();
+          	getObjects(getSessionId());
       	} else {
         	console.error(request.statusText, request.responseText);
       	}
@@ -40,6 +41,21 @@ function postLogin(username, psw){
 		psw: psw
    	};
    	request.send(JSON.stringify(newItem));
+}
+
+// GET OBJEKT INFO
+function getObjects(sessionID) {
+    var request = new XMLHttpRequest();
+    request.setRequestHeader("session",getSessionId());
+    request.open("GET", "object/");
+    request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
+        if (request.status === 200) {
+            var objectData = JSON.parse(request.responseText);
+            localStorage.setItem("objectData", objectData);
+            console.error(request.statusText, request.responseText);
+        }
+    });
+    request.send();
 }
 
 
@@ -613,7 +629,7 @@ function addForumCaregoryNavigation() {
 
 function getSessionId() {
     if(typeof(Storage) !== "undefined") {
-        return localStorage.getItem("UUID");
+        return localStorage.getItem("sessionID");
     } else {
         return sessionID;
     }
