@@ -46,8 +46,8 @@ function postLogin(username, psw){
 // GET OBJEKT INFO
 function getObjects() {
     var request = new XMLHttpRequest();
-    request.setRequestHeader("session",getSessionId());
     request.open("GET", "object/");
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
             var objectData = JSON.parse(request.responseText);
@@ -61,8 +61,8 @@ function getObjects() {
 
 function getItems(itemCategorie, callback){
     var request = new XMLHttpRequest();
-    request.setRequestHeader("session",getSessionId());
     request.open("GET", itemCategorie);
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status == 200) {
             var data = JSON.parse(request.responseText);
