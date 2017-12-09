@@ -405,6 +405,7 @@ function loadAllItems(itemCategorie) {
 }
 
 function clearBeforeLoad() {
+    document.getElementById('dynamic-content-container-forum').innerHTML = '';
 	var inputContainer = document.getElementById("input-container2");
 	if (inputContainer.classList.contains("show")) {
 		inputContainer.classList.remove("show");
