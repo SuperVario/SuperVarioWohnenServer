@@ -37,7 +37,7 @@ class ForumContext {
     }
     
     func getForumEntries(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        if let auth = request.headers["auth"], let _ = Tenant.getTentantByCode(code: auth, connection: connection) {
+        func getEntries() {
             if let category = Int(request.parameters["category"] ?? "") {
                 do {
                     let params = build((category))
@@ -52,6 +52,11 @@ class ForumContext {
             }
             response.status(.badRequest)
             next()
+        }
+        if let auth = request.headers["auth"], let _ = Tenant.getTentantByCode(code: auth, connection: connection) {
+            getEntries()
+        } else if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
+            getEntries()
         } else {
             response.status(.unauthorized)
             next()
@@ -89,7 +94,7 @@ class ForumContext {
     }
     
     func getForumAnswers(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        if let auth = request.headers["auth"], let _ = Tenant.getTentantByCode(code: auth, connection: connection) {
+        func getAnswer() {
             if let _ = Int(request.parameters["category"] ?? ""), let entry = Int(request.parameters["entry"] ?? "") {
                 do {
                     let params = build((entry))
@@ -104,6 +109,11 @@ class ForumContext {
             }
             response.status(.badRequest)
             next()
+        }
+        if let auth = request.headers["auth"], let _ = Tenant.getTentantByCode(code: auth, connection: connection) {
+            getAnswer()
+        } else if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
+            getAnswer()
         } else {
             response.status(.unauthorized)
             next()
