@@ -602,10 +602,10 @@ function addSBToList(data) {
 function addForumCaregoryNavigation() {
     const navBar = `<nav id="drawer" class="nav">
           <ul class="nav__list">
-            <li class="nav__item"><a href="#">News</a></li>
-            <li class="nav__item"><a href="#">Events</a></li>
-            <li class="nav__item"><a href="#">Culture</a></li>
-            <li class="nav__item"><a href="#">Blog</a></li>
+            <li class="nav__item"><a href="#">Neuigkeiten</a></li>
+            <li class="nav__item"><a href="#">Geplantes</a></li>
+            <li class="nav__item"><a href="#">Veranstaltungen</a></li>
+            <li class="nav__item"><a href="#">Börse</a></li>
           </ul>
         </nav>`
     document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
