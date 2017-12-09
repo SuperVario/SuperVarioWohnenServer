@@ -512,6 +512,13 @@ function addMieterToList(data) {
     a2.setAttribute("item-id", data.id);
     a2.innerText = "Bearbeiten";
 
+    var a3 = document.createElement("a");
+    a3.className = "tenant-upload-button modal-trigger";
+    a3.setAttribute("href", "#modal-tenant-upload");
+    //a3.setAttribute('onClick', "getTenantData()");
+    a3.setAttribute("item-id", data.id);
+    a3.innerText = "Upload";
+
 	footer.appendChild(a1);
 	footer.appendChild(a2);
 
