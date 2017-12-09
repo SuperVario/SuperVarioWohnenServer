@@ -30,7 +30,6 @@ struct ForumCategory: QueryRowResultType, QueryParameterDictionaryType {
         do {
             let params = build((objectId))
             let categories: [ForumCategory] = try connection.execute { try $0.query("SELECT * FROM ForumCategory WHERE object_id = ?;", params) }
-            print(categories)
             return categories
         } catch {
             print(error)
