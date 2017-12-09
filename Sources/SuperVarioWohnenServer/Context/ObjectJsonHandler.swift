@@ -7,14 +7,26 @@
 
 import Foundation
 import SwiftyJSON
+import MySQL
 
 extension HouseObject {
-    func toJson() -> JSON {
+    func toJson(connection: ConnectionPool) -> JSON {
+        let categories = ForumCategory.getCategories(objectId: id, connection: connection)
+        var categoriesJson = [[String: Any]]()
+        
+        for category in categories {
+            categoriesJson.append([
+                "id" : category.id,
+                "name": category.name
+                ])
+        }
+        
         let json = JSON([
             "id": id,
             "street": street,
             "place": place,
-            "postcode": postcode
+            "postcode": postcode,
+            "forumCategories": categoriesJson
             ])
         return json
     }

@@ -23,7 +23,7 @@ class ObjectHandler {
             do {
                 let params = build((staff.managementId))
                 let entries: [HouseObject] = try connection.execute { try $0.query("SELECT * FROM Object o WHERE o.management_id = ?;", params) }
-                response.status(.OK).send(json: JSON(entries.map {$0.toJson()}))
+                response.status(.OK).send(json: JSON(entries.map {$0.toJson(connection: connection)}))
                 next()
             } catch {
                 print(error)
@@ -42,7 +42,7 @@ class ObjectHandler {
                     let status = try connection.execute { try $0.query("INSERT INTO Object SET ?;", [houseObject]) }
                     houseObject.id = Int(status.insertedID)
                     
-                    response.status(.created).send(json: houseObject.toJson())
+                    response.status(.created).send(json: houseObject.toJson(connection: connection))
                     next()
                 } catch QueryError.queryExecutionError(let message, _) {
                     print("SQL Error: \(message)")

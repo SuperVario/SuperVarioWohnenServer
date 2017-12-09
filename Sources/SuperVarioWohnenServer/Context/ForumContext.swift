@@ -22,7 +22,7 @@ class ForumContext {
         if let auth = request.headers["auth"], let tenant = Tenant.getTentantByCode(code: auth, connection: connection) {
             do {
                 let params = build((tenant.objectId))
-                let entries: [ForumCategory] = try connection.execute { try $0.query("SELECT * FROM ForumCatagory WHERE object_id = ?;", params) }
+                let entries: [ForumCategory] = try connection.execute { try $0.query("SELECT * FROM ForumCategory WHERE object_id = ?;", params) }
                 response.status(.OK).send(json: JSON(entries.map {$0.toJson()}))
                 next()
             } catch {
