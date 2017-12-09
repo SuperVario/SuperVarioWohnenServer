@@ -387,8 +387,9 @@ function loadForum() {
     $('#btn-forum-load').parents().addClass('active');
     clearBeforeLoad();
     addActionButton("addForum");
+    addForumCaregoryNavigation();
     addRowForDynamicContent();
-    //loadAllItems(schwarzesBrett);
+    //loadAllItems(forum);
 }
 
 function loadAllItems(itemCategorie) {
@@ -593,6 +594,20 @@ function addSBToList(data) {
 	section.appendChild(card_blue);
 
 	row.appendChild(section);
+}
+
+// DYNAMISCHER INHALT FORUM
+
+function addForumCaregoryNavigation() {
+    const navBar = `<nav id="drawer" class="nav">
+          <ul class="nav__list">
+            <li class="nav__item"><a href="#">News</a></li>
+            <li class="nav__item"><a href="#">Events</a></li>
+            <li class="nav__item"><a href="#">Culture</a></li>
+            <li class="nav__item"><a href="#">Blog</a></li>
+          </ul>
+        </nav>`
+    document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
 }
 
 function getSessionId() {
