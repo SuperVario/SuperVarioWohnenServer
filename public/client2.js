@@ -9,6 +9,7 @@ let sessionID = "";
 // onClick Funktionalität der Menü Leiste
 $('body').on('click', '#btn-mieter-load', e=> loadMieter());
 $('body').on('click', '#btn-SB-load', e=> loadSB());
+$('body').on('click', '#btn-forum-load', e=> loadForum());
 
 // HTTP Methoden
 
@@ -381,13 +382,25 @@ function loadSB() {
 	loadAllItems(schwarzesBrett);
 }
 
+function loadForum() {
+    updateNavBar();
+    $('#btn-forum-load').parents().addClass('active');
+    clearBeforeLoad();
+    addActionButton("addForum");
+    addRowForDynamicContent();
+    //loadAllItems(schwarzesBrett);
+}
+
 function loadAllItems(itemCategorie) {
-	if (itemCategorie === '/tenant') {
+	if (itemCategorie === mieter) {
 		getItems(itemCategorie, items => items.forEach(item => addMieterToList(item)));
 	}
-	if (itemCategorie === '/SB') {
+	else if (itemCategorie === schwarzesBrett) {
 		getItems(itemCategorie, items => items.forEach(item => addSBToList(item)));
-	}	
+	}
+    else if (itemCategorie === forum) {
+        getItems(itemCategorie, items => items.forEach(item => addForumToList(item)));
+    }
 }
 
 function clearBeforeLoad() {
