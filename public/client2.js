@@ -1,6 +1,6 @@
 // Übergabeparameter für HTTP Methoden
 var mieter = "/tenant";
-var schwarzesBrett = "/SB";
+var schwarzesBrett = "/board";
 var forum = "/forum";
 
 // used to store UUID in case browser does not support sessionStorage
@@ -46,7 +46,7 @@ function postLogin(username, psw){
 // GET OBJEKT INFO
 function getObjects() {
     var request = new XMLHttpRequest();
-    request.open("GET", "object/");
+    request.open("GET", "/object");
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
@@ -107,7 +107,7 @@ function deleteItem(itemCategorie, id){
 }
 
 function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrCodeData){
-	var request = new XMLHttpRequest();    r
+	var request = new XMLHttpRequest();
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
@@ -164,7 +164,7 @@ function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil
 
 function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDatumFormated, erstellZeit, verfallsDatum, nachricht){
 	var request = new XMLHttpRequest();
-   	request.open("POST","/SB");
+   	request.open("POST","/board");
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
@@ -719,6 +719,5 @@ function getSessionId() {
 $( document ).ready(function(){
 	$(".button-collapse").sideNav();
 	$('.modal').modal();
-	loadAllItems(mieter);
-	addActionButton("addMieter");	
+	addActionButton("addMieter");
 });
