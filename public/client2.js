@@ -54,7 +54,7 @@ function getObjects() {
         if (request.status === 200) {
             // 	var objectData = JSON.parse(request.responseText);
             sessionStorage.setItem("objectData", request.responseText);
-            objData = JSON.parse(sessionStorage.getItem("objectData"));
+            objData = JSON.parse(request.responseText);
         }
     });
     request.send();
