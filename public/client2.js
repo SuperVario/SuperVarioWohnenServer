@@ -3,6 +3,8 @@ var mieter = "/tenant";
 var schwarzesBrett = "/board";
 var forum = "/forum";
 
+let objData;
+
 // used to store UUID in case browser does not support sessionStorage
 let sessionID = "";
 
@@ -52,6 +54,7 @@ function getObjects() {
         if (request.status === 200) {
             // 	var objectData = JSON.parse(request.responseText);
             sessionStorage.setItem("objectData", request.responseText);
+            objData = JSON.parse(sessionStorage.getItem("objectData"));
         }
     });
     request.send();
@@ -634,10 +637,10 @@ function addSBToList(data) {
 function addForumCategoryNavigation() {
     const navBar = `<nav id="drawer" class="nav">
           <ul class="nav__list">
-            <li class="nav__item"><a onclick=getForumItemsByCategory(JSON.parse(sessionStorage.getItem("objectData")).forumCategories[0].id)>News</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(JSON.parse(sessionStorage.getItem("objectData")).forumCategories[1].id)>Events</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(JSON.parse(sessionStorage.getItem("objectData")).forumCategories[2].id)>Culture</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(JSON.parse(sessionStorage.getItem("objectData")).forumCategories[3].id)>Blog</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData.forumCategories[0].id)>News</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData.forumCategories[1].id)>Events</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData.forumCategories[2].id)>Culture</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData.forumCategories[3].id)>Blog</a></li>
           </ul>
         </nav>`
     document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
