@@ -50,8 +50,8 @@ function getObjects() {
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
-            var objectData = JSON.parse(request.responseText);
-            sessionStorage.setItem("objectData", objectData);
+            // 	var objectData = JSON.parse(request.responseText);
+            sessionStorage.setItem("objectData", request.responseText);
         }
     });
     request.send();
