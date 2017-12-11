@@ -25,4 +25,15 @@ struct ForumCategory: QueryRowResultType, QueryParameterDictionaryType {
             "name": name
         ])
     }
+    
+    static func getCategories(objectId: Int, connection: ConnectionPool) -> [ForumCategory] {
+        do {
+            let params = build((objectId))
+            let categories: [ForumCategory] = try connection.execute { try $0.query("SELECT * FROM ForumCategory WHERE object_id = ?;", params) }
+            return categories
+        } catch {
+            print(error)
+        }
+        return []
+    }
 }
