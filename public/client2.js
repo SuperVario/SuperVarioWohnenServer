@@ -588,19 +588,14 @@ function addSBToList(data) {
 
 	var span1 = document.createElement("span");
 	span1.className = "SB-card-title";
-	span1.innerText = data.titel;
+	span1.innerText = data.title;
 	li.appendChild(span1);
-
-	var span2 = document.createElement("span");
-	span2.className = "SB-card-verfasser";
-	span2.innerText = data.verfasser + ", am  " + data.erstellDatumFormated + " um " + data.erstellZeit;
-	li.appendChild(span2);
 
 	ul.appendChild(li);
 
 	var li2 = document.createElement("li");
 	li2.className = "SB-card-nachricht";
-	li2.innerText = data.nachricht;
+	li2.innerText = data.message;
 	ul.appendChild(li2);	
 
 	var footer = document.createElement("div");
