@@ -52,7 +52,6 @@ function getObjects() {
         if (request.status === 200) {
             var objectData = JSON.parse(request.responseText);
             sessionStorage.setItem("objectData", objectData);
-            console.error(request.statusText, request.responseText);
         }
     });
     request.send();
@@ -591,6 +590,12 @@ function addSBToList(data) {
 	span1.innerText = data.title;
 	li.appendChild(span1);
 
+	//TODO
+	// var span2 = document.createElement("span");
+    // span2.className = "SB-card-verfasser";
+    // span2.innerText = data.verfasser + ", am  " + data.erstellDatumFormated + " um " + data.erstellZeit;
+    // li.appendChild(span2);
+
 	ul.appendChild(li);
 
 	var li2 = document.createElement("li");
@@ -629,10 +634,10 @@ function addSBToList(data) {
 function addForumCategoryNavigation() {
     const navBar = `<nav id="drawer" class="nav">
           <ul class="nav__list">
-            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[0].id)>News</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[1].id)>Events</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[2].id)>Culture</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem(objectData).forumCategories[3].id)>Blog</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem("objectData").forumCategories[0].id)>News</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem("objectData").forumCategories[1].id)>Events</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem("objectData").forumCategories[2].id)>Culture</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(sessionStorage.getItem("objectData").forumCategories[3].id)>Blog</a></li>
           </ul>
         </nav>`
     document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
