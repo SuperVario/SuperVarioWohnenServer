@@ -404,6 +404,7 @@ function getTenantData() {
 
 function loadMieter() {
 	updateNavBar();
+    addRowForDynamicContent();
 	clearBeforeLoad();
 	addActionButton("addMieter");
 	addRowForDynamicContent();
@@ -412,6 +413,7 @@ function loadMieter() {
 
 function loadSB() {
 	updateNavBar();
+    addRowForDynamicContent();
 	clearBeforeLoad();
 	addActionButton("addSB");
 	addRowForDynamicContent();
@@ -420,6 +422,7 @@ function loadSB() {
 
 function loadForum() {
     updateNavBar();
+    addRowForDynamicContent();
     $('#btn-forum-load').parents().addClass('active');
     clearBeforeLoad();
     addActionButton("addForum");
@@ -449,7 +452,8 @@ function clearBeforeLoad() {
 		inputContainer.classList.remove("show");
 	}
 	var element = document.getElementById("item-list-row");
-	element.removeChild(element);
+	element.parentNode.removeChild(element);
+
 	document.getElementsByClassName('btn-floating btn-large red')[0].removeAttribute("id");
 	var actionButton = document.getElementsByClassName('btn-floating btn-large red')[0];
 	actionButton.removeAttribute("href");
