@@ -449,7 +449,7 @@ function clearBeforeLoad() {
 		inputContainer.classList.remove("show");
 	}
 	var element = document.getElementById("item-list-row");
-	element.parentNode.removeChild(element);
+	element.removeChild(element);
 	document.getElementsByClassName('btn-floating btn-large red')[0].removeAttribute("id");
 	var actionButton = document.getElementsByClassName('btn-floating btn-large red')[0];
 	actionButton.removeAttribute("href");
@@ -505,7 +505,7 @@ function showMieterInputField() {
 // DYNAMISCHER INHALT MIETER
 function addMieterToList(data) {
 
-	const row = document.getElementById('item-list-row');
+	let row = document.getElementById('item-list-row');
 
     const section = document.createElement("section");
 	section.className = "item-card-container col s12 m6 l4";
