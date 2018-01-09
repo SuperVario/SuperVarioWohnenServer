@@ -199,7 +199,7 @@ function getForumItemsByCategory(categoryId) {
         if (request.status === 200) {
             var data = JSON.parse(request.responseText);
             console.info(data);
-            data.forEach(addForumItemToList);
+            data.forEach(addForumItemToList(element));
         } else {
             console.error(request.statusText, request.responseText);
         }
@@ -662,7 +662,7 @@ function addForumCategoryNavigation() {
 }
 
 // writes the forum items into the HTML
-function addForumItemToList() {
+function addForumItemToList(data) {
 
     let row = document.getElementById('item-list-row');
 
