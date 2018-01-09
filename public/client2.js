@@ -604,11 +604,11 @@ function addSBToList(data) {
 	span1.innerText = data.title;
 	li.appendChild(span1);
 
-	//TODO
-	// var span2 = document.createElement("span");
-    // span2.className = "SB-card-verfasser";
-    // span2.innerText = data.verfasser + ", am  " + data.erstellDatumFormated + " um " + data.erstellZeit;
-    // li.appendChild(span2);
+
+	var span2 = document.createElement("span");
+    span2.className = "SB-card-verfasser";
+    span2.innerText = data.createDate;
+    li.appendChild(span2);
 
 	ul.appendChild(li);
 
@@ -620,19 +620,19 @@ function addSBToList(data) {
 	var footer = document.createElement("div");
 	footer.className = "card-action";
 
-	var a1 = document.createElement("a");
-	a1.className = "delete-SBItem-button modal-trigger";
-	a1.setAttribute("href", "#modal-delete-SB");
-	a1.setAttribute("item-id", data.id);
-	a1.innerText = "Löschen";
-
-	var a2 = document.createElement("a");
-	a2.className = "edit-SBItem-button";
-	a2.setAttribute("href", "#");
-	a2.innerText = "Bearbeiten";
-
-	footer.appendChild(a1);
-	footer.appendChild(a2);
+	// var a1 = document.createElement("a");
+	// a1.className = "delete-SBItem-button modal-trigger";
+	// a1.setAttribute("href", "#modal-delete-SB");
+	// a1.setAttribute("item-id", data.id);
+	// a1.innerText = "Löschen";
+    //
+	// var a2 = document.createElement("a");
+	// a2.className = "edit-SBItem-button";
+	// a2.setAttribute("href", "#");
+	// a2.innerText = "Bearbeiten";
+    //
+	// footer.appendChild(a1);
+	// footer.appendChild(a2);
 
 	card_content.appendChild(ul);
 	card_blue.appendChild(card_content);
@@ -681,19 +681,19 @@ function addForumItemToList() {
 
     var span1 = document.createElement("span");
     span1.className = "SB-card-title";
-    span1.innerText = data.titel;
+    span1.innerText = data.title;
     li.appendChild(span1);
 
     var span2 = document.createElement("span");
     span2.className = "SB-card-verfasser";
-    span2.innerText = data.verfasser + ", am  " + data.erstellDatumFormated + " um " + data.erstellZeit;
+    span2.innerText = data.tenant.name + " " + data.tenant.lastName + ", am  " + data.date;
     li.appendChild(span2);
 
     ul.appendChild(li);
 
     var li2 = document.createElement("li");
     li2.className = "SB-card-nachricht";
-    li2.innerText = data.nachricht;
+    li2.innerText = data.message;
     ul.appendChild(li2);
 
     var footer = document.createElement("div");
