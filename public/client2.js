@@ -199,7 +199,7 @@ function getForumItemsByCategory(categoryId) {
         if (request.status === 200) {
             var data = JSON.parse(request.responseText);
             console.info(data);
-            data.forEach(addForumItemToList(element));
+            data.forEach(addForumItemToList);
         } else {
             console.error(request.statusText, request.responseText);
         }
