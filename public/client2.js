@@ -31,6 +31,7 @@ function postLogin(username, psw){
             }
           	hideLogin();
           	loadAllItems(mieter);
+            showActionButton();
           	addActionButton("addMieter");
           	updateNavBar();
           	getObjects();
@@ -192,7 +193,7 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
 
 function getForumItemsByCategory(categoryId) {
     var request = new XMLHttpRequest();
-    request.open("GET", "forum/" + categoryId);
+    request.open("GET", "/forum/" + categoryId);
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
@@ -213,6 +214,7 @@ function getLoginInputData() {
 	const sha256 = new jsSHA('SHA-256', 'TEXT');
 	sha256.update(psw);
 	const shaPsw = sha256.getHash('HEX');
+    console.log("psw in sha256: " + sha256);
 	const data = {
 		username : userName,
 		password : shaPsw
@@ -451,6 +453,15 @@ function clearBeforeLoad() {
 	actionButton.classList.remove('modal-trigger');
 	resetActionButtonSymbol();
 	
+}
+
+function showActionButton() {
+    const actionButton = `<div class="fixed-action-btn">
+          <a class="btn-floating btn-large red">
+            <i class="large material-icons" id="action-button-symbol">add</i>
+          </a>           
+        </div>`
+    document.getElementById('main').innerHTML = actionButton;
 }
 
 function addActionButton(idValue) {
