@@ -199,6 +199,7 @@ function getForumItemsByCategory(categoryId) {
         if (request.status === 200) {
             var data = JSON.parse(request.responseText);
             console.info(data);
+            clearForumBeforeReload();
             data.forEach(addForumItemToList);
         } else {
             console.error(request.statusText, request.responseText);
@@ -724,6 +725,11 @@ function addForumItemToList(data) {
 
     row.appendChild(section);
 
+}
+
+function clearForumBeforeReload() {
+    var element = document.getElementById("item-list-row");
+    element.parentNode.removeChild(element);
 }
 
 function getSessionId() {
