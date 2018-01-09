@@ -200,6 +200,7 @@ function getForumItemsByCategory(categoryId) {
             var data = JSON.parse(request.responseText);
             console.info(data);
             clearForumBeforeReload();
+            addRowForDynamicContent();
             data.forEach(addForumItemToList);
         } else {
             console.error(request.statusText, request.responseText);
