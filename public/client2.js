@@ -714,8 +714,8 @@ function addForumItemToList(data) {
     // a2.setAttribute("href", "#");
     // a2.innerText = "Bearbeiten";
 
-    footer.appendChild(a1);
-    footer.appendChild(a2);
+    // footer.appendChild(a1);
+    // footer.appendChild(a2);
 
     card_content.appendChild(ul);
     card_blue.appendChild(card_content);
