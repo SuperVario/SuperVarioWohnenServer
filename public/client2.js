@@ -440,7 +440,10 @@ function loadAllItems(itemCategorie) {
 }
 
 function clearBeforeLoad() {
-    document.getElementById('dynamic-content-container-forum').innerHTML = '';
+	let contentContainerForum = document.getElementById('dynamic-content-container-forum');
+	if (contentContainerForum !== null) {
+        document.getElementById('dynamic-content-container-forum').innerHTML = '';
+	}
 	var inputContainer = document.getElementById("input-container2");
 	if (inputContainer.classList.contains("show")) {
 		inputContainer.classList.remove("show");
@@ -733,5 +736,5 @@ function getSessionId() {
 $( document ).ready(function(){
 	$(".button-collapse").sideNav();
 	$('.modal').modal();
-	addActionButton("addMieter");
+	// addActionButton("addMieter");
 });
