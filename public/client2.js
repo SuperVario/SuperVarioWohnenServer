@@ -7,6 +7,7 @@ var objData;
 
 // used to store UUID in case browser does not support sessionStorage
 let sessionID = "";
+let objectId = "";
 
 // onClick Funktionalität der Menü Leiste
 $('body').on('click', '#btn-mieter-load', e=> loadMieter());
@@ -56,6 +57,7 @@ function getObjects() {
             // 	var objectData = JSON.parse(request.responseText);
             sessionStorage.setItem("objectData", request.responseText);
             objData = JSON.parse(request.responseText);
+            objectId = objData[0].id;
         }
     });
     request.send();
@@ -114,7 +116,9 @@ function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrC
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
-   	request.addEventListener('load', function(event) {
+    request.setRequestHeader("object_id",objectId);
+
+    request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
           	var data = JSON.parse(request.responseText);
@@ -655,9 +659,9 @@ function addForumCategoryNavigation() {
     const navBar = `<nav id="drawer" class="nav">
           <ul class="nav__list">
             <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[0].id)>News</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[1].forumCategories[1].id)>Events</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[2].forumCategories[2].id)>Culture</a></li>
-            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[3].forumCategories[3].id)>Blog</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[1].id)>Events</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[2].id)>Culture</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[3].id)>Blog</a></li>
           </ul>
         </nav>`
     document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
@@ -740,6 +744,7 @@ function getSessionId() {
         return sessionID;
     }
 }
+
 
 $( document ).ready(function(){
 	$(".button-collapse").sideNav();
