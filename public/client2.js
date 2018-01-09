@@ -31,7 +31,7 @@ function postLogin(username, psw){
             }
           	hideLogin();
           	loadAllItems(mieter);
-            showActionButton();
+            //showActionButton();
           	addActionButton("addMieter");
           	updateNavBar();
           	getObjects();
@@ -404,7 +404,6 @@ function getTenantData() {
 
 function loadMieter() {
 	updateNavBar();
-    addRowForDynamicContent();
 	clearBeforeLoad();
 	addActionButton("addMieter");
 	addRowForDynamicContent();
@@ -413,7 +412,6 @@ function loadMieter() {
 
 function loadSB() {
 	updateNavBar();
-    addRowForDynamicContent();
 	clearBeforeLoad();
 	addActionButton("addSB");
 	addRowForDynamicContent();
@@ -422,7 +420,6 @@ function loadSB() {
 
 function loadForum() {
     updateNavBar();
-    addRowForDynamicContent();
     $('#btn-forum-load').parents().addClass('active');
     clearBeforeLoad();
     addActionButton("addForum");
@@ -468,7 +465,7 @@ function showActionButton() {
             <i class="large material-icons" id="action-button-symbol">add</i>
           </a>           
         </div>`
-    document.getElementById('main').innerHTML = actionButton;
+    document.getElementById('main').appendChild(actionButton);
 }
 
 function addActionButton(idValue) {
