@@ -133,7 +133,7 @@ function addMieter(firstName, lastName, mail, tel, mobil, qrCodeData, objectId){
 		mail: mail,
 		tel: tel,
 		mobil: mobil,
-		qrcode_date: qrCodeData,
+		qrcode_date: firstName + lastName,
 		objectId: objectId
    	};
    	request.send(JSON.stringify(newItem));
@@ -141,7 +141,7 @@ function addMieter(firstName, lastName, mail, tel, mobil, qrCodeData, objectId){
 
 function editMieter(id, firstName, lastName, mail, tel, mobil, objectId) {
     var request = new XMLHttpRequest();
-    request.open("POST","/tenant");
+    request.open("PUT","/tenant/" + id);
     request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
