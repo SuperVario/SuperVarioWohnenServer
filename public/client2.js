@@ -116,7 +116,6 @@ function addMieter(firstName, lastName, mail, tel, mobil, objectId){
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
-    request.setRequestHeader("object",objectId);
 
     request.addEventListener('load', function(event) {
       	if (request.status == 201) {
