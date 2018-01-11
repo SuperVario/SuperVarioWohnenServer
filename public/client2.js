@@ -141,7 +141,7 @@ function addMieter(firstName, lastName, mail, tel, mobil, qrCodeData, objectId){
 
 function editMieter(id, firstName, lastName, mail, tel, mobil, objectId) {
     var request = new XMLHttpRequest();
-    request.open("POST","/tenant/" + id);
+    request.open("POST","/tenant");
     request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
