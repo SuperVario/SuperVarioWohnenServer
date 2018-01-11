@@ -111,7 +111,7 @@ function deleteItem(itemCategorie, id){
 	request.send();
 }
 
-function addMieter(firstName, lastName, mail, tel, mobil, qrCodeData, objectId){
+function addMieter(firstName, lastName, mail, tel, mobil, objectId){
 	var request = new XMLHttpRequest();
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
@@ -133,7 +133,7 @@ function addMieter(firstName, lastName, mail, tel, mobil, qrCodeData, objectId){
 		mail: mail,
 		tel: tel,
 		mobil: mobil,
-		qrcode_date: firstName + lastName,
+		qrcode_data: firstName + lastName,
 		objectId: objectId
    	};
    	request.send(JSON.stringify(newItem));
