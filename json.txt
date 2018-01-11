@@ -1,0 +1,94 @@
+struct Board: Decodable {
+    let createDate: String
+    let title: String
+    let message: String
+    let id : Int
+    let expireDate : Int
+}
+
+struct Documents: Decodable {
+    let folder: String
+    let name: String
+    let id : Int
+}
+
+struct Categories: Decodable {
+    let name: String
+    let id : Int
+}
+
+let category = """
+[
+    {
+        "name": "Test",
+        "id": 1
+    }
+]
+""".data(using : .utf8)!
+
+let document = """
+
+[
+    {
+        "folder": "Verträge",
+        "name": "Mietvertrag",
+        "id": 2
+    }
+]
+""".data(using: .utf8)!
+
+
+let board = """
+[
+    {
+        "createDate": "2017-12-07 16:35:10 +0000",
+        "title": "Mietvertrag",
+        "message": "Verträge",
+        "id": 2,
+        "expireDate": 2
+    }
+]
+""".data(using: .utf8)! // our data in native format
+
+let beitrag = """
+[
+    {
+        "tenant": {
+            "name": "Test",
+            "id": 1,
+            "lastName": "Tdvfqwu",
+        },
+        "id": 1,
+        "title": "Test",
+        "message": "ubinomp,",
+        "date": "2017-12-07 16:35:10 +0000",
+    },
+    {
+        "tenant": {
+            "name": "Test",
+            "id": 1,
+            "lastName": "Tdvfqwu",
+        },
+        "id": 3,
+        "title": "Mietvertrag",
+        "message": "Verträge",
+        "date": "2017-12-07 16:35:10 +0000",
+    },
+]
+""".data(using: .utf8)!
+
+let beitragArray = try JSONDecoder().decode([Conduct].self, from: beitrag)
+
+beitragArray.forEach { print($0) }
+//print(beitragArray)
+let boardArray = try JSONDecoder().decode([Board].self, from: board)
+
+boardArray.forEach { print($0) } // decoded!!!!!
+1
+let documentArray = try JSONDecoder().decode([Documents].self, from: document)
+
+documentArray.forEach { print($0) } // decoded!!!!!
+
+let categoryArray = try JSONDecoder().decode([Categories].self, from: category)
+
+categoryArray.forEach { print($0) }
