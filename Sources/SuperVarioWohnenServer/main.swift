@@ -77,6 +77,15 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
 
     router.all("/app", middleware: StaticFileServer())
     
+    class AfterHandler: RouterMiddleware {
+        func handle(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) {
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            next()
+        }
+    }
+    
+    router.all(middleware: AfterHandler())
+    
     #if os(OSX)
         Kitura.addHTTPServer(onPort: 2530, with: router)
     #else

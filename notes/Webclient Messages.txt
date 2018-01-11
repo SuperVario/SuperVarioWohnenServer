@@ -2,105 +2,164 @@
 ////// Mieter ////////
 //////////////////////
 
-Request: /mieter GET
+Request: /tenant GET
 	Params: Mieter ID
 	Params: Objekt ID
 
+    Header: auth=<qrcode> (iOS App)
+    Header: session=<session> (Web Interface)
+
 Response: 
 [
-	{
-			id
-			first_name
-			last_name
-			address
-			postcode
-			city
-			mail
-			telefon
-			mobile
-			qrcode_data
-	}
+    {
+        "documents": [
+            {
+                "id": 2,
+                "name": "Mietvertrag",
+                "folder": "Verträge"
+            }
+        ],
+        "mail": "wgon",
+        "qrcode_data": "ztiuohijopk",
+        "lastName": "Tdvfqwu",
+        "firstName": "Test",
+        "id": 1,
+        "tel": "465387628749"
+    }
 ]
 
-Request: /mieter POST
+Request: /tenant POST
+
+    Header: session=<session> (Web Interface)
+
 Request Body: 
-[
-	{
-			first_name
-			last_name
-			address
-			postcode
-			city
-			mail
-			telefon
-			mobile
-	}
-]
+{
+    "mail": "wgon",
+    "qrcode_data": "ztiuohijopk",
+    "lastName": "Tdvfqwu",
+    "firstName": "Test",
+    "id": 1,
+    "tel": "465387628749",
+    "objectId": 1
+}
 Response: 
-[
-	{
-			id
-			first_name
-			last_name
-			address
-			postcode
-			city
-			mail
-			telefon
-			mobile
-			qrcode_data
-	}
-]
+{
+    "id": 15,
+    "lastName": "Tdvfqwu",
+    "tel": "465387628749",
+    "mail": "wgon",
+    "firstName": "Test",
+    "qrcode_data": "tzfwduihjopkp",
+    "documents": []
+}
 
-Request: /mieter/{id} DELETE
+Request: /tenant/{id} DELETE
 
+    Header: session=<session> (Web Interface)
 
 
 //////////////////////
 ///// Aktuelles //////
 //////////////////////
 
-Request: /SB GET
+Request: /board GET
+
+	Header: auth=<qrcode> (iOS App)
+    Header: session=<session> (Web Interface)
 
 Response: 
 [
-	{
-			id
-			object_id
-			title
-			author
-			create_datetime
-			expire_date (optional)
-			message
-	}
+    {
+        "createDate": "2017-12-07 16:35:10 +0000",
+        "title": "Mietvertrag",
+        "message": "Verträge",
+        "id": 2,
+        "expireDate": null
+    }
 ]
 
-Request: /SB POST
+Request: /board POST
+
+    Header: session=<session> (Web Interface)
+
 Request Body: 
-[
-	{
-			object_id
-			title
-			author
-			create_datetime
-			expire_date (optional)
-			message
-	}
-]
+{
+    "createDate": "2017-12-07 16:35:10 +0000",
+    "title": "Mietvertrag",
+    "message": "Verträge",
+    "expireDate": "2017-12-07 16:35:10 +0000",
+    "objectId": 2
+}
+Response: 
+{
+    "createDate": "2017-12-07 16:35:10 +0000",
+    "title": "Mietvertrag",
+    "message": "Verträge",
+    "id":2
+    "expireDate": "2017-12-07 16:35:10 +0000"
+}
+
+Request: /board/{id} DELETE
+
+    Header: session=<session> (Web Interface)
+
+
+
+
+//////////////////////
+/////// Forum ////////
+//////////////////////
+
+Request: /forum GET
+
+	Header: auth=<qrcode> (iOS App)
+
 Response: 
 [
-	{
-			id
-			object_id
-			title
-			author
-			create_datetime
-			expire_date (optional)
-			message
-	}
+    {
+        "id": 1,
+        "name": "Test"
+    }
 ]
 
-Request: /SB/{id} DELETE
+Request: /forum/<category> GET
 
+    Header: session=<session> (Web Interface)
+	Header: auth=<qrcode> (iOS App)
+
+Response: 
+[
+    {
+        "date": "2017-12-07 16:35:10 +0000",
+        "title": "Test",
+        "message": "ubinomp,",
+        "id": 1,
+        "tenant": {
+            "id": 1,
+            "name": "Test",
+            "lastName": "Tdvfqwu"
+        }
+    }
+]
+
+
+Request: /forum/<category>/<entry> GET
+
+    Header: session=<session> (Web Interface)
+	Header: auth=<qrcode> (iOS App)
+
+Response: 
+[
+    {
+        "date": "2017-12-07 16:35:10 +0000",
+        "message": "Antwort 1",
+        "id": 1,
+        "tenant": {
+            "id": 2,
+            "name": "Test",
+            "lastName": "Tdvfqwu"
+        }
+    }
+]
 
 
