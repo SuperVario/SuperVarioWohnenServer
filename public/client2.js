@@ -119,7 +119,7 @@ function addMieter(firstName, lastName, mail, tel, mobil, objectId){
     request.setRequestHeader("object",objectId);
 
     request.addEventListener('load', function(event) {
-      	if (request.status == 200) {
+      	if (request.status == 201) {
         	console.info(request.responseText);
           	var data = JSON.parse(request.responseText);
           	addMieterToList(data);
