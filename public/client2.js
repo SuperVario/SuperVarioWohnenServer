@@ -116,7 +116,6 @@ function addMieter(firstName, lastName, mail, tel, mobil, objectId){
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
-    request.setRequestHeader("object",objectId);
 
     request.addEventListener('load', function(event) {
       	if (request.status == 201) {
@@ -261,6 +260,8 @@ function getEditedTenantData() {
     mob = $("#modal-edit-tenant-mobil").text();
 }
 
+
+// TODO ausObjId die adr usw hiolen
 function updateTenantCard(data) {
     const nameField = '.mieter-card-name.' + data.id;
     const adrField = '.mieter-card-adr.' + data.id;
@@ -268,7 +269,7 @@ function updateTenantCard(data) {
     const telField = '.mieter-card-tel.' + data.id;
     const mobilField = '.mieter-card-mobil.' + data.id;
     $(nameField).text(data.firstName + ' ' + data.lastName);
-    $(adrField).text(data.adress + ', ' + data.plz + ' ' + data.city);
+    $(adrField).text(adr + ', ' + plz + ' ' + city);
     $(mailField).text(data.mail);
     $(telField).text(data.tel);
     $(mobilField).text(data.mobil);
