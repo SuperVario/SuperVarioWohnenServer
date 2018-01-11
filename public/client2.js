@@ -284,7 +284,7 @@ function saveMieterAndConfirm() {
 	// var qrURL = generateQRCodeURL(fn, ln, adr);
 	// var qr = document.getElementById("qr-code");
 	// qr.src = qrURL;
-	addMieter(fn, ln, mail, tel, mob, qrData, 1); //TODO add objID
+	addMieter(fn, ln, mail, tel, mob, 1); //TODO add objID
 }
 
 function generateQRCodeURL(fn, ln, adr) {
