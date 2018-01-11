@@ -111,7 +111,7 @@ function deleteItem(itemCategorie, id){
 	request.send();
 }
 
-function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrCodeData){
+function addMieter(firstName, lastName, mail, tel, mobil, qrCodeData, objectId){
 	var request = new XMLHttpRequest();
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
@@ -130,18 +130,16 @@ function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrC
    	var newItem = { 
 		firstName: firstName,
 		lastName: lastName,
-		adress: adress,
-		plz: plz,
-		city: city,
 		mail: mail,
 		tel: tel,
 		mobil: mobil,
-		qrCodeData: qrCodeData
+		qrcode_date: qrCodeData,
+		objectId: objectId
    	};
    	request.send(JSON.stringify(newItem));
 }
 
-function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil) {
+function editMieter(id, firstName, lastName, mail, tel, mobil, objectId) {
     var request = new XMLHttpRequest();
     request.open("POST","/tenant/" + id);
     request.setRequestHeader("Content-type","application/json");
@@ -159,12 +157,10 @@ function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil
         id: id,
         firstName: firstName,
         lastName: lastName,
-        adress: adress,
-        plz: plz,
-        city: city,
         mail: mail,
         tel: tel,
-        mobil: mobil
+        mobil: mobil,
+		objectId: objectId
     };
     request.send(JSON.stringify(newItem));
 }
@@ -288,7 +284,7 @@ function saveMieterAndConfirm() {
 	// var qrURL = generateQRCodeURL(fn, ln, adr);
 	// var qr = document.getElementById("qr-code");
 	// qr.src = qrURL;
-	addMieter(fn, ln, adr, plz, city, mail, tel, mob, qrData);
+	addMieter(fn, ln, mail, tel, mob, qrData, 1); //TODO add objID
 }
 
 function generateQRCodeURL(fn, ln, adr) {
@@ -343,7 +339,7 @@ $("body").on("click", "#btn-modal-speichern", e=> saveMieterAndConfirm());
 // mieter bearbeiten
 $("body").on("click", ".edit-tenant-button", e=> saveTargetId($(event.target).attr("item-id")));
 $("body").on("click", "#btn-edit-tenant-speichern", e=> getEditedTenantData());
-$("body").on("click", "#btn-modal-edit-tenant-confirm", e=> editMieter(itemId, fn, ln, adr, plz, city, mail, tel, mob));
+$("body").on("click", "#btn-modal-edit-tenant-confirm", e=> editMieter(itemId, fn, ln, mail, tel, mob, 1)); //TODO add ObjID
 
 // mieter Löschen
 $("body").on("click", ".delete-mieter-button", e=> saveTargetId($(event.target).attr("item-id")));
