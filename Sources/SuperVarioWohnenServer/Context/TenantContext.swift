@@ -116,7 +116,7 @@ class TenantContext {
                     let param = build((tenant.name, tenant.lastName, tenant.telefon, tenant.mail, tenant.id))
                     _ = try connection.execute { try $0.query("UPDATE Tenant SET name = ?, last_name = ?, telefon = ?, mail = ? WHERE id = ?;", param) }
                     
-                    response.status(.OK)
+                    response.status(.OK).send(json: tenant.toJson(connection: connection))
                     next()
                 } catch QueryError.queryExecutionError(let message, _) {
                     print("SQL Error: \(message)")
