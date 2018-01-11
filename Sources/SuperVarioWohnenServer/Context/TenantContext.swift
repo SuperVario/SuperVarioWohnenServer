@@ -112,7 +112,7 @@ class TenantContext {
     func putTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
         if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
             if let json = request.body?.asJSON {
-                let tenant = Tenant.fromJson(json: json)
+                var tenant = Tenant.fromJson(json: json)
                 tenant.active = true
                 do {
                     let param = build((tenant.name, tenant.lastName, tenant.telefon, tenant.mail, tenant.id))
