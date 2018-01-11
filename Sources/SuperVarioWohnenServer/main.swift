@@ -52,7 +52,8 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.get("/object", handler: objectHandler.getObjects)
     router.post("/object", handler: objectHandler.postObject)
     
-    router.get("/tenant", handler: tenantContext.getTenant)
+    router.get("/tenant", handler: tenantContext.getTenants)
+    router.get("/tenant/:id", handler: tenantContext.getTenant)
     router.post("/tenant", handler: tenantContext.postTenant)
     router.put("/tenant/:id", handler: tenantContext.putTenant)
     router.delete("/tenant/:id", handler: tenantContext.deleteTenant)

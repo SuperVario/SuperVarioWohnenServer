@@ -18,7 +18,7 @@ class TenantContext {
         self.connection = connection
     }
     
-    func getTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
+    func getTenants(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
         if let session = request.headers["session"], let staff = Staff.getStaffBySession(session: session, connection: connection) {
             if let tenantString = request.queryParameters["tenantId"], let tenantId = Int(tenantString) {
                 do {
@@ -51,6 +51,29 @@ class TenantContext {
                 }
             }
             response.status(.internalServerError)
+            next()
+        } else {
+            response.status(.unauthorized)
+            next()
+        }
+    }
+
+    func getTenant(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
+        if let session = request.headers["session"], let staff = Staff.getStaffBySession(session: session, connection: connection) {
+            if let tenantString = request.parameters["id"], let tenantId = Int(tenantString) {
+                do {
+                    let params = build((staff.session, tenantId))
+                    let tenants: [Tenant] = try connection.execute { try $0.query("SELECT t.* FROM Tenant t JOIN Object o ON o.id = t.object_id JOIN Management m ON m.id = o.management_id JOIN Staff s ON s.management_id = m.id WHERE s.session = ? AND t.id = ? AND t.active = 1;", params) }
+                    if let first = tenants.first {
+                        response.status(.OK).send(json: first.toJson(connection: connection))
+                        next()
+                        return
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+            response.status(.notFound)
             next()
         } else {
             response.status(.unauthorized)
