@@ -48,6 +48,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.all(middleware: BodyParser())
     
     router.post("/login", handler: loginContext.login)
+    router.get("/validation", handler: loginContext.login)
     
     router.get("/object", handler: objectHandler.getObjects)
     router.post("/object", handler: objectHandler.postObject)
