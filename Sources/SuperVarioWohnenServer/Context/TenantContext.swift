@@ -85,6 +85,7 @@ class TenantContext {
         if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
             if let json = request.body?.asJSON {
                 var tenant = Tenant.fromJson(json: json)
+                tenant.active = true
                 do {
                     let status = try connection.execute { try $0.query("INSERT INTO Tenant SET ?;", [tenant]) }
                     tenant.id = Int(status.insertedID)
@@ -112,6 +113,7 @@ class TenantContext {
         if let session = request.headers["session"], let _ = Staff.getStaffBySession(session: session, connection: connection) {
             if let json = request.body?.asJSON {
                 let tenant = Tenant.fromJson(json: json)
+                tenant.active = true
                 do {
                     let param = build((tenant.name, tenant.lastName, tenant.telefon, tenant.mail, tenant.id))
                     _ = try connection.execute { try $0.query("UPDATE Tenant SET name = ?, last_name = ?, telefon = ?, mail = ? WHERE id = ?;", param) }
