@@ -30,17 +30,17 @@
         </div>
       </nav>
 
-      <main>
+      <main id="main">
 
-        // Just used as a test sample for file upload
-        <form ref='uploadForm'
-              id='uploadForm'
-              action='http://localhost:2530/upload'
-              method='post'
-              encType="multipart/form-data">
-          <input type="file" name="sampleFile" />
-          <input type='submit' value='Upload!' />
-        </form>
+        <!--// Just used as a test sample for file upload-->
+        <!--<form ref='uploadForm'-->
+              <!--id='uploadForm'-->
+              <!--action='http://localhost:2530/upload'-->
+              <!--method='post'-->
+              <!--encType="multipart/form-data">-->
+          <!--<input type="file" name="sampleFile" />-->
+          <!--<input type='submit' value='Upload!' />-->
+        <!--</form>-->
 
 
         <div class="container" id='login-container'>
@@ -131,15 +131,19 @@
           </div>
         </section>
          
-        <!-- Trigger Action Button -->
+         <!--Trigger Action Button-->
         <div class="fixed-action-btn">
           <a class="btn-floating btn-large red">
             <i class="large material-icons" id="action-button-symbol">add</i>
-          </a>           
+          </a>
+        </div>
+
+        <!-- Hier Kommen dynamisch forum categorien rein -->
+        <div id="dynamic-content-container-forum">
         </div>
 
         <!-- Hier Kommen dynamisch die Item-Cards rein -->
-        <div class="dynamic-content-container">
+        <div class="dynamic-content-container" id="dynamic-content-container">
           <div class="row" id='item-list-row'>          
           </div>         
         </div>
@@ -251,6 +255,17 @@
         <div class="modal-footer">
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Abbrechen</a>
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="btn-modal-Mieter-loeschen">Löschen</a>
+        </div>
+      </div>
+
+      <!-- Modal Structure // Mieter upload -->
+      <div id="modal-tenant-upload" class="modal modal-container">
+        <div class="modal-content tenant-upload">
+          <h4 class="modal-tenant-upload-titel">Documenten Upload</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Abbrechen</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" id="btn-modal-tenent-upload">upload</a>
         </div>
       </div>
 

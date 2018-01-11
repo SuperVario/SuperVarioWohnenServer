@@ -1,0 +1,84 @@
+https://thecodelabs.de:2530
+
+/board:
+
+[
+    {
+        "createDate": "2017-12-07 16:35:10 +0000",
+        "title": "Mietvertrag",
+        "message": "Verträge",
+        "id": 2,
+        "expireDate": null
+    }
+]
+
+/forum --> Categories
+
+[
+    {
+        "name": "Test",
+        "id": 1
+    }
+]
+
+/form/[category] --> Beträge (Entry)
+
+[
+    {
+        "tenant": {
+            "name": "Test",
+            "id": 1,
+            "lastName": "Tdvfqwu"
+        },
+        "id": 1,
+        "title": "Test",
+        "message": "ubinomp,",
+        "date": "2017-12-07 16:35:10 +0000"
+    },
+    {
+        "tenant": {
+            "name": "Test",
+            "id": 1,
+            "lastName": "Tdvfqwu"
+        },
+        "id": 3,
+        "title": "Mietvertrag",
+        "message": "Verträge",
+        "date": "2017-12-07 16:35:10 +0000"
+    }
+]
+
+/forum/[category]/[entry] --> Antworten
+
+[
+    {
+        "tenant": {
+            "name": "Test",
+            "id": 2,
+            "lastName": "Tdvfqwu"
+        },
+        "id": 1,
+        "message": "Antwort 1",
+        "date": "2017-12-07 16:35:10 +0000"
+    },
+    {
+        "tenant": {
+            "name": "",
+            "id": 1,
+            "lastName": ""
+        },
+        "id": 2,
+        "message": "Verträge",
+        "date": "2017-12-07 16:35:10 +0000"
+    }
+]
+
+/documents
+
+[
+    {
+        "folder": "Verträge",
+        "name": "Mietvertrag",
+        "id": 2
+    }
+]

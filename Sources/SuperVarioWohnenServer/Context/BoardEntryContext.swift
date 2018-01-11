@@ -19,8 +19,6 @@ class BoardEntryContext {
     }
     
     func getAllEntries(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
-        
-        
         if let session = request.headers["session"], let staff = Staff.getStaffBySession(session: session, connection: connection) {
             do {
                 let params = build((staff.managementId))

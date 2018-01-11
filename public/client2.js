@@ -1,11 +1,18 @@
 // Übergabeparameter für HTTP Methoden
-var mieter = "/mieter";
-var schwarzesBrett = "/SB";
+var mieter = "/tenant";
+var schwarzesBrett = "/board";
 var forum = "/forum";
+
+var objData;
+
+// used to store UUID in case browser does not support sessionStorage
+let sessionID = "";
+let objectId = "";
 
 // onClick Funktionalität der Menü Leiste
 $('body').on('click', '#btn-mieter-load', e=> loadMieter());
 $('body').on('click', '#btn-SB-load', e=> loadSB());
+$('body').on('click', '#btn-forum-load', e=> loadForum());
 
 // HTTP Methoden
 
@@ -18,12 +25,17 @@ function postLogin(username, psw){
    	request.setRequestHeader("Content-type","application/json");
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
-        	console.info(request.responseText);
-          	var data = request.responseText;
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.setItem("sessionID", request.responseText);
+            } else {
+                sessionID = request.responseText;
+            }
           	hideLogin();
           	loadAllItems(mieter);
+            //showActionButton();
           	addActionButton("addMieter");
           	updateNavBar();
+          	getObjects();
       	} else {
         	console.error(request.statusText, request.responseText);
       	}
@@ -35,10 +47,27 @@ function postLogin(username, psw){
    	request.send(JSON.stringify(newItem));
 }
 
+// GET OBJEKT INFO
+function getObjects() {
+    var request = new XMLHttpRequest();
+    request.open("GET", "/object");
+    request.setRequestHeader("session",getSessionId());
+    request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
+        if (request.status === 200) {
+            // 	var objectData = JSON.parse(request.responseText);
+            sessionStorage.setItem("objectData", request.responseText);
+            objData = JSON.parse(request.responseText);
+            objectId = objData[0].id;
+        }
+    });
+    request.send();
+}
+
 
 function getItems(itemCategorie, callback){
     var request = new XMLHttpRequest();
     request.open("GET", itemCategorie);
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status == 200) {
             var data = JSON.parse(request.responseText);
@@ -54,6 +83,7 @@ function getItems(itemCategorie, callback){
 function getItem(itemCategorie, id, callback){
     var request = new XMLHttpRequest();
     request.open("GET", itemCategorie + "/" + id);
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
         if (request.status === 200) {
             var data = JSON.parse(request.responseText);
@@ -70,6 +100,7 @@ function deleteItem(itemCategorie, id){
 	var request = new XMLHttpRequest();
     $('.item-card-container').filter('[item-id='+id+']').remove();
    	request.open("DELETE", itemCategorie + "/" + id);
+    request.setRequestHeader("session",getSessionId());
    	request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
@@ -82,9 +113,12 @@ function deleteItem(itemCategorie, id){
 
 function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrCodeData){
 	var request = new XMLHttpRequest();
-   	request.open("POST","/mieter");
+   	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
-   	request.addEventListener('load', function(event) {
+    request.setRequestHeader("session",getSessionId());
+    request.setRequestHeader("object",objectId);
+
+    request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
           	var data = JSON.parse(request.responseText);
@@ -109,8 +143,9 @@ function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrC
 
 function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil) {
     var request = new XMLHttpRequest();
-    request.open("POST","/mieter/" + id);
+    request.open("POST","/tenant/" + id);
     request.setRequestHeader("Content-type","application/json");
+    request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
         if (request.status == 200) {
             console.info(request.responseText);
@@ -136,9 +171,10 @@ function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil
 
 function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDatumFormated, erstellZeit, verfallsDatum, nachricht){
 	var request = new XMLHttpRequest();
-   	request.open("POST","/SB");
+   	request.open("POST","/board");
    	request.setRequestHeader("Content-type","application/json");
-   	request.addEventListener('load', function(event) {
+    request.setRequestHeader("session",getSessionId());
+    request.addEventListener('load', function(event) {
       	if (request.status == 200) {
         	console.info(request.responseText);
           	var data = JSON.parse(request.responseText);
@@ -159,6 +195,24 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
    	request.send(JSON.stringify(newItem));
 }
 
+function getForumItemsByCategory(categoryId) {
+    var request = new XMLHttpRequest();
+    request.open("GET", "/forum/" + categoryId);
+    request.setRequestHeader("session",getSessionId());
+    request.addEventListener('load', function(event) {      // CALLBACK aufruf erst wenn LOAD rückgabe.
+        if (request.status === 200) {
+            var data = JSON.parse(request.responseText);
+            console.info(data);
+            clearForumBeforeReload();
+            addRowForDynamicContent();
+            data.forEach(addForumItemToList);
+        } else {
+            console.error(request.statusText, request.responseText);
+        }
+    });
+    request.send();
+}
+
 // Gets inputData from input form
 function getLoginInputData() {
 	const userName = $('#username').val();
@@ -166,6 +220,7 @@ function getLoginInputData() {
 	const sha256 = new jsSHA('SHA-256', 'TEXT');
 	sha256.update(psw);
 	const shaPsw = sha256.getHash('HEX');
+    console.log("psw in sha256: " + sha256);
 	const data = {
 		username : userName,
 		password : shaPsw
@@ -369,28 +424,54 @@ function loadSB() {
 	loadAllItems(schwarzesBrett);
 }
 
+function loadForum() {
+    updateNavBar();
+    $('#btn-forum-load').parents().addClass('active');
+    clearBeforeLoad();
+    addActionButton("addForum");
+    addForumCategoryNavigation();
+    addRowForDynamicContent();
+}
+
 function loadAllItems(itemCategorie) {
-	if (itemCategorie === '/mieter') {
+	if (itemCategorie === mieter) {
 		getItems(itemCategorie, items => items.forEach(item => addMieterToList(item)));
 	}
-	if (itemCategorie === '/SB') {
+	else if (itemCategorie === schwarzesBrett) {
 		getItems(itemCategorie, items => items.forEach(item => addSBToList(item)));
-	}	
+	}
+    else if (itemCategorie === forum) {
+        getItems(itemCategorie, items => items.forEach(item => addForumToList(item)));
+    }
 }
 
 function clearBeforeLoad() {
+	let contentContainerForum = document.getElementById('dynamic-content-container-forum');
+	if (contentContainerForum !== null) {
+        document.getElementById('dynamic-content-container-forum').innerHTML = '';
+	}
 	var inputContainer = document.getElementById("input-container2");
 	if (inputContainer.classList.contains("show")) {
 		inputContainer.classList.remove("show");
 	}
 	var element = document.getElementById("item-list-row");
 	element.parentNode.removeChild(element);
+
 	document.getElementsByClassName('btn-floating btn-large red')[0].removeAttribute("id");
 	var actionButton = document.getElementsByClassName('btn-floating btn-large red')[0];
 	actionButton.removeAttribute("href");
 	actionButton.classList.remove('modal-trigger');
 	resetActionButtonSymbol();
 	
+}
+
+function showActionButton() {
+    const actionButton = `<div class="fixed-action-btn">
+          <a class="btn-floating btn-large red">
+            <i class="large material-icons" id="action-button-symbol">add</i>
+          </a>           
+        </div>`
+    document.getElementById('main').appendChild(actionButton);
 }
 
 function addActionButton(idValue) {
@@ -431,7 +512,7 @@ function showMieterInputField() {
 // DYNAMISCHER INHALT MIETER
 function addMieterToList(data) {
 
-	const row = document.getElementById('item-list-row');
+	let row = document.getElementById('item-list-row');
 
     const section = document.createElement("section");
 	section.className = "item-card-container col s12 m6 l4";
@@ -487,6 +568,13 @@ function addMieterToList(data) {
     a2.setAttribute("item-id", data.id);
     a2.innerText = "Bearbeiten";
 
+    var a3 = document.createElement("a");
+    a3.className = "tenant-upload-button modal-trigger";
+    a3.setAttribute("href", "#modal-tenant-upload");
+    //a3.setAttribute('onClick', "getTenantData()");
+    a3.setAttribute("item-id", data.id);
+    a3.innerText = "Upload";
+
 	footer.appendChild(a1);
 	footer.appendChild(a2);
 
@@ -523,37 +611,38 @@ function addSBToList(data) {
 
 	var span1 = document.createElement("span");
 	span1.className = "SB-card-title";
-	span1.innerText = data.titel;
+	span1.innerText = data.title;
 	li.appendChild(span1);
 
+
 	var span2 = document.createElement("span");
-	span2.className = "SB-card-verfasser";
-	span2.innerText = data.verfasser + ", am  " + data.erstellDatumFormated + " um " + data.erstellZeit;
-	li.appendChild(span2);
+    span2.className = "SB-card-verfasser";
+    span2.innerText = data.createDate;
+    li.appendChild(span2);
 
 	ul.appendChild(li);
 
 	var li2 = document.createElement("li");
 	li2.className = "SB-card-nachricht";
-	li2.innerText = data.nachricht;
+	li2.innerText = data.message;
 	ul.appendChild(li2);	
 
 	var footer = document.createElement("div");
 	footer.className = "card-action";
 
-	var a1 = document.createElement("a");
-	a1.className = "delete-SBItem-button modal-trigger";
-	a1.setAttribute("href", "#modal-delete-SB");
-	a1.setAttribute("item-id", data.id);
-	a1.innerText = "Löschen";
-
-	var a2 = document.createElement("a");
-	a2.className = "edit-SBItem-button";
-	a2.setAttribute("href", "#");
-	a2.innerText = "Bearbeiten";
-
-	footer.appendChild(a1);
-	footer.appendChild(a2);
+	// var a1 = document.createElement("a");
+	// a1.className = "delete-SBItem-button modal-trigger";
+	// a1.setAttribute("href", "#modal-delete-SB");
+	// a1.setAttribute("item-id", data.id);
+	// a1.innerText = "Löschen";
+    //
+	// var a2 = document.createElement("a");
+	// a2.className = "edit-SBItem-button";
+	// a2.setAttribute("href", "#");
+	// a2.innerText = "Bearbeiten";
+    //
+	// footer.appendChild(a1);
+	// footer.appendChild(a2);
 
 	card_content.appendChild(ul);
 	card_blue.appendChild(card_content);
@@ -563,9 +652,102 @@ function addSBToList(data) {
 	row.appendChild(section);
 }
 
+// DYNAMISCHER INHALT FORUM
+
+// adds a navigation bar for different forum categories
+function addForumCategoryNavigation() {
+    const navBar = `<nav id="drawer" class="nav">
+          <ul class="nav__list">
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[0].id)>News</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[1].id)>Events</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[2].id)>Culture</a></li>
+            <li class="nav__item"><a onclick=getForumItemsByCategory(objData[0].forumCategories[3].id)>Blog</a></li>
+          </ul>
+        </nav>`
+    document.getElementById('dynamic-content-container-forum').innerHTML = navBar;
+}
+
+// writes the forum items into the HTML
+function addForumItemToList(data) {
+
+    let row = document.getElementById('item-list-row');
+
+    var section = document.createElement("section");
+    section.className = "item-card-container col s12";
+    section.setAttribute("item-id", data.id);
+
+    var card_blue = document.createElement("div");
+    card_blue.className = "SBItem-card card blue-grey darken-1";
+
+    var card_content = document.createElement("div");
+    card_content.className = "card-content SB white-text";
+    card_content.setAttribute("id", "card-content-SB");
+
+    var ul = document.createElement("ul");
+    ul.className = "SB-list-content";
+
+    var li = document.createElement("li");
+    li.className = "SB-header";
+
+    var span1 = document.createElement("span");
+    span1.className = "SB-card-title";
+    span1.innerText = data.title;
+    li.appendChild(span1);
+
+    var span2 = document.createElement("span");
+    span2.className = "SB-card-verfasser";
+    span2.innerText = data.tenant.name + " " + data.tenant.lastName + ", am  " + data.date;
+    li.appendChild(span2);
+
+    ul.appendChild(li);
+
+    var li2 = document.createElement("li");
+    li2.className = "SB-card-nachricht";
+    li2.innerText = data.message;
+    ul.appendChild(li2);
+
+    var footer = document.createElement("div");
+    footer.className = "card-action";
+
+    // var a1 = document.createElement("a");
+    // a1.className = "delete-SBItem-button modal-trigger";
+    // a1.setAttribute("href", "#modal-delete-SB");
+    // a1.setAttribute("item-id", data.id);
+    // a1.innerText = "Löschen";
+    //
+    // var a2 = document.createElement("a");
+    // a2.className = "edit-SBItem-button";
+    // a2.setAttribute("href", "#");
+    // a2.innerText = "Bearbeiten";
+
+    // footer.appendChild(a1);
+    // footer.appendChild(a2);
+
+    card_content.appendChild(ul);
+    card_blue.appendChild(card_content);
+    card_blue.appendChild(footer);
+    section.appendChild(card_blue);
+
+    row.appendChild(section);
+
+}
+
+function clearForumBeforeReload() {
+    var element = document.getElementById("item-list-row");
+    element.parentNode.removeChild(element);
+}
+
+function getSessionId() {
+    if(typeof(Storage) !== "undefined") {
+        return sessionStorage.getItem("sessionID");
+    } else {
+        return sessionID;
+    }
+}
+
+
 $( document ).ready(function(){
 	$(".button-collapse").sideNav();
 	$('.modal').modal();
-	loadAllItems(mieter);
-	addActionButton("addMieter");	
+	// addActionButton("addMieter");
 });
