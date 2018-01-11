@@ -10,14 +10,17 @@ import SwiftyJSON
 
 extension BoardEntry {
     func toJson() -> JSON {
-        let json = JSON([
+        var vals: [String : Any] = [
             "id": id,
             "title": title,
             "message": message,
             
             "createDate": createDate.description,
-            "expireDate": expireDate?.description  as Any
-        ])
+        ]
+        if let expireDate = expireDate {
+            vals["expireDate"] = expireDate.description
+        }
+        let json = JSON(vals)
 
         return json
     }
