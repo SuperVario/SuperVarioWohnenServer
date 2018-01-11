@@ -44,6 +44,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     let boardEntryContext = BoardEntryContext(connection: pool)
     let uploadContext = UploadContext(uploadPath: settings.uploadPath)
     let forumContext = ForumContext(connection: pool)
+    let managementContext = ManagementContext(connection: pool)
     
     router.all(middleware: BodyParser())
     
@@ -75,6 +76,8 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.post("/forum/:category", handler: forumContext.postEntry)
     router.get("/forum/:category/:entry", handler: forumContext.getForumAnswers)
     router.post("/forum/:category/:entry", handler: forumContext.postAnswer)
+    
+    router.get("/management", handler: managementContext.getManagement)
 
     router.all("/app", middleware: StaticFileServer())
     
