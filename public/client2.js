@@ -111,15 +111,14 @@ function deleteItem(itemCategorie, id){
 	request.send();
 }
 
-function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrCodeData){
+function addMieter(firstName, lastName, mail, tel, mobil, objectId){
 	var request = new XMLHttpRequest();
    	request.open("POST","/tenant");
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
-    request.setRequestHeader("object",objectId);
 
     request.addEventListener('load', function(event) {
-      	if (request.status == 200) {
+      	if (request.status == 201) {
         	console.info(request.responseText);
           	var data = JSON.parse(request.responseText);
           	addMieterToList(data);
@@ -130,20 +129,18 @@ function addMieter(firstName, lastName, adress, plz, city, mail, tel, mobil, qrC
    	var newItem = { 
 		firstName: firstName,
 		lastName: lastName,
-		adress: adress,
-		plz: plz,
-		city: city,
 		mail: mail,
 		tel: tel,
 		mobil: mobil,
-		qrCodeData: qrCodeData
+		qrcode_data: firstName + lastName,
+		objectId: objectId
    	};
    	request.send(JSON.stringify(newItem));
 }
 
-function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil) {
+function editMieter(id, firstName, lastName, mail, tel, mobil, objectId) {
     var request = new XMLHttpRequest();
-    request.open("POST","/tenant/" + id);
+    request.open("PUT","/tenant/" + id);
     request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
@@ -159,12 +156,10 @@ function editMieter(id, firstName, lastName, adress, plz, city, mail, tel, mobil
         id: id,
         firstName: firstName,
         lastName: lastName,
-        adress: adress,
-        plz: plz,
-        city: city,
         mail: mail,
         tel: tel,
-        mobil: mobil
+        mobil: mobil,
+		objectId: objectId
     };
     request.send(JSON.stringify(newItem));
 }
@@ -235,11 +230,12 @@ function hideLogin() {
 
 // Speichert die Eingabedaten des "Mieter hinzufügen" Feldes
 function getInputData() {
-	fn = $("#first_name").val();
+    fn = $("#first_name").val();
 	ln = $("#last_name").val();
-	adr = $("#mieter_adr").val();
-	plz = $("#plz").val();
-	city = $("#ort").val();
+	// adr = $("#mieter_adr").val();
+	adr = "Teststraße 34, 10827 Berlin";
+	// plz = $("#plz").val();
+	// city = $("#ort").val();
 	mail = $("#email").val();
 	tel = $("#telpriv").val();
 	mob = $("#mobil").val();
@@ -247,8 +243,8 @@ function getInputData() {
 	$("#modal-mieter-fn").text(fn);
 	$("#modal-mieter-ln").text(ln);
 	$("#modal-mieter-adr").text(adr);
-	$("#modal-mieter-city").text(city);
-	$("#modal-mieter-plz").text(plz);
+	// $("#modal-mieter-city").text(city);
+	// $("#modal-mieter-plz").text(plz);
 	$("#modal-mieter-mail").text(mail);
 	$("#modal-mieter-telpriv").text(tel);
 	$("#modal-mieter-mobil").text(mob);
@@ -257,14 +253,16 @@ function getInputData() {
 function getEditedTenantData() {
     fn = $("#modal-edit-tenant-fn").text();
     ln = $("#modal-edit-tenant-ln").text();
-    adr = $("#modal-edit-tenant-adr").text();
-    plz = $("#modal-edit-tenant-plz").text();
-    city = $("#modal-edit-tenant-city").text();
+    adr = "Teststraße 34, 10827 Berlin";
+    // plz = $("#modal-edit-tenant-plz").text();
+    // city = $("#modal-edit-tenant-city").text();
     mail = $("#modal-edit-tenant-mail").text();
     tel = $("#modal-edit-tenant-telpriv").text();
     mob = $("#modal-edit-tenant-mobil").text();
 }
 
+
+// TODO ausObjId die adr usw hiolen
 function updateTenantCard(data) {
     const nameField = '.mieter-card-name.' + data.id;
     const adrField = '.mieter-card-adr.' + data.id;
@@ -272,7 +270,7 @@ function updateTenantCard(data) {
     const telField = '.mieter-card-tel.' + data.id;
     const mobilField = '.mieter-card-mobil.' + data.id;
     $(nameField).text(data.firstName + ' ' + data.lastName);
-    $(adrField).text(data.adress + ', ' + data.plz + ' ' + data.city);
+    $(adrField).text("Teststraße 34, 10827 Berlin");
     $(mailField).text(data.mail);
     $(telField).text(data.tel);
     $(mobilField).text(data.mobil);
@@ -280,15 +278,18 @@ function updateTenantCard(data) {
 
 // Aufruf der HTTP POST Methode und einfügen der Daten in MieterCard zur Darstellung im HtmL
 function saveMieterAndConfirm() {
+    var mieterInputField = document.querySelector(".input-mieter2");
+    mieterInputField.classList.toggle("show");
+    changeActionButtonSymbol();
 	$("#card-title").text(fn + " " + ln);
-	$("#card-str").text(adr + ", " + plz + " " + city);
+	$("#card-str").text(adr);
 	$("#card-mail").text(mail);
 	$("#card-tel").text(tel);
 	$("#card-mobil").text(mob);
 	// var qrURL = generateQRCodeURL(fn, ln, adr);
 	// var qr = document.getElementById("qr-code");
 	// qr.src = qrURL;
-	addMieter(fn, ln, adr, plz, city, mail, tel, mob, qrData);
+	addMieter(fn, ln, mail, tel, mob, 1); //TODO add objID
 }
 
 function generateQRCodeURL(fn, ln, adr) {
@@ -343,7 +344,7 @@ $("body").on("click", "#btn-modal-speichern", e=> saveMieterAndConfirm());
 // mieter bearbeiten
 $("body").on("click", ".edit-tenant-button", e=> saveTargetId($(event.target).attr("item-id")));
 $("body").on("click", "#btn-edit-tenant-speichern", e=> getEditedTenantData());
-$("body").on("click", "#btn-modal-edit-tenant-confirm", e=> editMieter(itemId, fn, ln, adr, plz, city, mail, tel, mob));
+$("body").on("click", "#btn-modal-edit-tenant-confirm", e=> editMieter(itemId, fn, ln, mail, tel, mob, 1)); //TODO add ObjID
 
 // mieter Löschen
 $("body").on("click", ".delete-mieter-button", e=> saveTargetId($(event.target).attr("item-id")));
@@ -399,9 +400,9 @@ function getTenantData() {
     getItem(mieter, id, function (data) {
         $('#modal-edit-tenant-fn').text(data.firstName);
         $('#modal-edit-tenant-ln').text(data.lastName);
-        $('#modal-edit-tenant-adr').text(data.adress);
-        $('#modal-edit-tenant-plz').text(data.plz);
-        $('#modal-edit-tenant-plz').text(data.city);
+        $('#modal-edit-tenant-adr').text("Teststraße 34, 10827 Berlin");
+        // $('#modal-edit-tenant-plz').text(data.plz);
+        // $('#modal-edit-tenant-plz').text(data.city);
         $('#modal-edit-tenant-mail').text(data.mail);
         $('#modal-edit-tenant-mobil').text(data.mobil);
         $('#modal-edit-tenant-telpriv').text(data.tel);
@@ -534,7 +535,7 @@ function addMieterToList(data) {
 
     const li2 = document.createElement("li");
 	li2.className = "mieter-card-adr";
-	li2.innerText = data.adress + ", " + data.plz + " " + data.city;
+	li2.innerText = "Teststraße 34, 10827 Berlin";
 	ul.appendChild(li2);
 
     const li3 = document.createElement("li");
@@ -749,5 +750,6 @@ function getSessionId() {
 $( document ).ready(function(){
 	$(".button-collapse").sideNav();
 	$('.modal').modal();
+    $('select').material_select();
 	// addActionButton("addMieter");
 });

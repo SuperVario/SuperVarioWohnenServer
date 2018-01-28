@@ -27,9 +27,11 @@ extension Tenant {
             "firstName": name,
             "lastName": lastName,
             "tel": telefon,
+            "mobil": mobil,
             "mail": mail,
             "qrcode_data": qrcode,
-            "documents": documentJsonArray
+            "documents": documentJsonArray,
+            "objectId:": objectId
         ])
         return json
     }
@@ -41,6 +43,7 @@ extension Tenant {
             lastName: json["lastName"].stringValue,
             
             telefon: json["tel"].stringValue,
+            mobil: json["mobil"].stringValue,
             mail: json["mail"].stringValue,
             
             qrcode: json["qrcode_data"].stringValue,

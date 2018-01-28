@@ -21,7 +21,7 @@ extension ForumCategory {
 
 extension ForumEntry {
     func toJson(connection: ConnectionPool) -> JSON {
-        let tenant = Tenant.getById(id: id, connection: connection)
+        let tenant = Tenant.getById(id: tenantId, connection: connection)
         let json = JSON([
             "id": id,
             "title": title,

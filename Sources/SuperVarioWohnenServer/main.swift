@@ -9,7 +9,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     class Settings: ConnectionOption {
         init(data: Data) {
             let settingsJson = JSON(data: data)
-
+            
             host = settingsJson["host"].stringValue
             port = settingsJson["port"].intValue
             user = settingsJson["user"].stringValue
@@ -49,6 +49,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.all(middleware: BodyParser())
     
     router.post("/login", handler: loginContext.login)
+    router.get("/validation", handler: loginContext.validateCode)
     
     router.get("/object", handler: objectHandler.getObjects)
     router.post("/object", handler: objectHandler.postObject)
@@ -78,7 +79,7 @@ if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
     router.post("/forum/:category/:entry", handler: forumContext.postAnswer)
     
     router.get("/management", handler: managementContext.getManagement)
-
+    
     router.all("/app", middleware: StaticFileServer())
     
     class AfterHandler: RouterMiddleware {
