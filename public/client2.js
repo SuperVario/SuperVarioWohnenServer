@@ -279,7 +279,7 @@ function updateTenantCard(data) {
 // Aufruf der HTTP POST Methode und einfügen der Daten in MieterCard zur Darstellung im HtmL
 function saveMieterAndConfirm() {
 	$("#card-title").text(fn + " " + ln);
-	$("#card-str").text(adr + ", " + plz + " " + city);
+	$("#card-str").text(adr);
 	$("#card-mail").text(mail);
 	$("#card-tel").text(tel);
 	$("#card-mobil").text(mob);
