@@ -32,17 +32,6 @@
 
       <main id="main">
 
-        <!--// Just used as a test sample for file upload-->
-        <!--<form ref='uploadForm'-->
-              <!--id='uploadForm'-->
-              <!--action='http://localhost:2530/upload'-->
-              <!--method='post'-->
-              <!--encType="multipart/form-data">-->
-          <!--<input type="file" name="sampleFile" />-->
-          <!--<input type='submit' value='Upload!' />-->
-        <!--</form>-->
-
-
         <div class="container" id='login-container'>
           <div class="row">
             <div class="col s12 push-s3">
@@ -95,18 +84,27 @@
                 </div>
               </div>
               <div class="row">
-                <div class="input-field col s12 m8">
-                  <input id="mieter_adr" type="text" class="validate">
-                  <label for="mieter_adr">Adresse</label>
+                <div class="input-field col s12">
+                  <select>
+                    <option value="" disabled selected>Choose your option</option>
+                    <option value="1">Teststraße 34, 10827 Berlin</option>
+                    <!--<option value="2">Option 2</option>-->
+                    <!--<option value="3">Option 3</option>-->
+                  </select>
+                  <label>Mietobjekt</label>
                 </div>
-                <div class="input-field col s6 m2">
-                  <input value="" size="5" name="form[plz]" id="plz" type="text">
-                  <label for="plz">PLZ</label>
-                </div>
-                <div class="input-field col s6 m2">
-                  <input value="" size="20" name="form[ort]" id="ort" type="text">
-                  <label for="ort"></label>
-                </div>
+                <!--<div class="input-field col s12">-->
+                  <!--<input id="mieter_adr" type="text" class="validate">-->
+                  <!--<label for="mieter_adr">Adresse</label>-->
+                <!--</div>-->
+                <!--<div class="input-field col s6 m2">-->
+                  <!--<input value="" size="5" name="form[plz]" id="plz" type="text">-->
+                  <!--<label for="plz">PLZ</label>-->
+                <!--</div>-->
+                <!--<div class="input-field col s6 m2">-->
+                  <!--<input value="" size="20" name="form[ort]" id="ort" type="text">-->
+                  <!--<label for="ort"></label>-->
+                <!--</div>-->
               </div>
               <div class="row">
                 <div class="input-field col s12 m4">
@@ -166,14 +164,14 @@
             <span class="col s4">Adresse</span>
             <span class="col s8" id="modal-mieter-adr"></span>
           </div>
-          <div class="row">
-            <span class="col s4">PLZ</span>
-            <span class="col s8" id="modal-mieter-plz"></span>
-          </div>
-          <div class="row">
-            <span class="col s4">CITY</span>
-            <span class="col s8" id="modal-mieter-city"></span>
-          </div>
+          <!--<div class="row">-->
+            <!--<span class="col s4">PLZ</span>-->
+            <!--<span class="col s8" id="modal-mieter-plz"></span>-->
+          <!--</div>-->
+          <!--<div class="row">-->
+            <!--<span class="col s4">CITY</span>-->
+            <!--<span class="col s8" id="modal-mieter-city"></span>-->
+          <!--</div>-->
           <div class="row">
             <span class="col s4">EMail</span>
             <span class="col s8" id="modal-mieter-mail"></span>
@@ -209,14 +207,14 @@
             <span class="col s4">Adresse</span>
             <span class="col s8" id="modal-edit-tenant-adr" contenteditable="true"></span>
           </div>
-          <div class="row">
-            <span class="col s4">PLZ</span>
-            <span class="col s8" id="modal-edit-tenant-plz" contenteditable="true"></span>
-          </div>
-          <div class="row">
-            <span class="col s4">CITY</span>
-            <span class="col s8" id="modal-edit-tenant-city" contenteditable="true"></span>
-          </div>
+          <!--<div class="row">-->
+            <!--<span class="col s4">PLZ</span>-->
+            <!--<span class="col s8" id="modal-edit-tenant-plz" contenteditable="true"></span>-->
+          <!--</div>-->
+          <!--<div class="row">-->
+            <!--<span class="col s4">CITY</span>-->
+            <!--<span class="col s8" id="modal-edit-tenant-city" contenteditable="true"></span>-->
+          <!--</div>-->
           <div class="row">
             <span class="col s4">EMail</span>
             <span class="col s8" id="modal-edit-tenant-mail" contenteditable="true"></span>

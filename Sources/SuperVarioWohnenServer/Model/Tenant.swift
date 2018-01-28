@@ -14,6 +14,7 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
     var lastName: String
     
     var telefon: String
+    var mobil: String
     var mail: String
     
     var qrcode: String
@@ -28,6 +29,7 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
             lastName: r <| "last_name",
             
             telefon: r <| "telefon",
+            mobil: r <| "mobil",
             mail: r <| "mail",
             
             qrcode: r <| "qrcode",
@@ -43,6 +45,7 @@ struct Tenant: QueryRowResultType, QueryParameterDictionaryType {
             "last_name": lastName,
             
             "telefon": telefon,
+            "mobil": mobil,
             "mail": mail,
             
             "qrcode": qrcode,

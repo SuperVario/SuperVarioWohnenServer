@@ -45,4 +45,13 @@ class LoginContext {
         next()
     }
     
+    func validateCode(request: RouterRequest, response: RouterResponse, next: @escaping () -> Void) -> Void {
+        if let auth = request.headers["auth"], Tenant.getTentantByCode(code: auth, connection: connection) != nil {
+            response.status(.OK)
+            next()
+        } else {
+            response.status(.unauthorized)
+            next()
+        }
+    }
 }
