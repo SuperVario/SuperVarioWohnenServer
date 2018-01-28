@@ -230,9 +230,6 @@ function hideLogin() {
 
 // Speichert die Eingabedaten des "Mieter hinzufügen" Feldes
 function getInputData() {
-    var mieterInputField = document.querySelector(".input-mieter2");
-    mieterInputField.classList.toggle("show");
-    changeActionButtonSymbol();
     fn = $("#first_name").val();
 	ln = $("#last_name").val();
 	// adr = $("#mieter_adr").val();
@@ -281,6 +278,9 @@ function updateTenantCard(data) {
 
 // Aufruf der HTTP POST Methode und einfügen der Daten in MieterCard zur Darstellung im HtmL
 function saveMieterAndConfirm() {
+    var mieterInputField = document.querySelector(".input-mieter2");
+    mieterInputField.classList.toggle("show");
+    changeActionButtonSymbol();
 	$("#card-title").text(fn + " " + ln);
 	$("#card-str").text(adr);
 	$("#card-mail").text(mail);
