@@ -396,9 +396,9 @@ function getTenantData() {
     getItem(mieter, id, function (data) {
         $('#modal-edit-tenant-fn').text(data.firstName);
         $('#modal-edit-tenant-ln').text(data.lastName);
-        $('#modal-edit-tenant-adr').text(data.adress);
-        $('#modal-edit-tenant-plz').text(data.plz);
-        $('#modal-edit-tenant-plz').text(data.city);
+        $('#modal-edit-tenant-adr').text("Teststraße 34, 10827 Berlin");
+        // $('#modal-edit-tenant-plz').text(data.plz);
+        // $('#modal-edit-tenant-plz').text(data.city);
         $('#modal-edit-tenant-mail').text(data.mail);
         $('#modal-edit-tenant-mobil').text(data.mobil);
         $('#modal-edit-tenant-telpriv').text(data.tel);
