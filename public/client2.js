@@ -230,7 +230,10 @@ function hideLogin() {
 
 // Speichert die Eingabedaten des "Mieter hinzufügen" Feldes
 function getInputData() {
-	fn = $("#first_name").val();
+    var mieterInputField = document.querySelector(".input-mieter2");
+    mieterInputField.classList.toggle("show");
+    changeActionButtonSymbol();
+    fn = $("#first_name").val();
 	ln = $("#last_name").val();
 	// adr = $("#mieter_adr").val();
 	adr = "Teststraße 34, 10827 Berlin";
