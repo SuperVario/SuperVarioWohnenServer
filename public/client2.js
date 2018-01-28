@@ -531,7 +531,7 @@ function addMieterToList(data) {
 
     const li2 = document.createElement("li");
 	li2.className = "mieter-card-adr";
-	li2.innerText = data.adress + ", " + data.plz + " " + data.city;
+	li2.innerText = "Teststraße 34, 10827 Berlin";
 	ul.appendChild(li2);
 
     const li3 = document.createElement("li");
