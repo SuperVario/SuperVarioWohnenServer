@@ -243,8 +243,8 @@ function getInputData() {
 	$("#modal-mieter-fn").text(fn);
 	$("#modal-mieter-ln").text(ln);
 	$("#modal-mieter-adr").text(adr);
-	$("#modal-mieter-city").text(city);
-	$("#modal-mieter-plz").text(plz);
+	// $("#modal-mieter-city").text(city);
+	// $("#modal-mieter-plz").text(plz);
 	$("#modal-mieter-mail").text(mail);
 	$("#modal-mieter-telpriv").text(tel);
 	$("#modal-mieter-mobil").text(mob);
@@ -253,9 +253,9 @@ function getInputData() {
 function getEditedTenantData() {
     fn = $("#modal-edit-tenant-fn").text();
     ln = $("#modal-edit-tenant-ln").text();
-    adr = $("#modal-edit-tenant-adr").text();
-    plz = $("#modal-edit-tenant-plz").text();
-    city = $("#modal-edit-tenant-city").text();
+    adr = "Teststraße 34, 10827 Berlin";
+    // plz = $("#modal-edit-tenant-plz").text();
+    // city = $("#modal-edit-tenant-city").text();
     mail = $("#modal-edit-tenant-mail").text();
     tel = $("#modal-edit-tenant-telpriv").text();
     mob = $("#modal-edit-tenant-mobil").text();
