@@ -232,9 +232,10 @@ function hideLogin() {
 function getInputData() {
 	fn = $("#first_name").val();
 	ln = $("#last_name").val();
-	adr = $("#mieter_adr").val();
-	plz = $("#plz").val();
-	city = $("#ort").val();
+	// adr = $("#mieter_adr").val();
+	adr = "Teststraße 34, 10827 Berlin";
+	// plz = $("#plz").val();
+	// city = $("#ort").val();
 	mail = $("#email").val();
 	tel = $("#telpriv").val();
 	mob = $("#mobil").val();
