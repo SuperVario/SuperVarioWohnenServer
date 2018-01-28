@@ -269,7 +269,7 @@ function updateTenantCard(data) {
     const telField = '.mieter-card-tel.' + data.id;
     const mobilField = '.mieter-card-mobil.' + data.id;
     $(nameField).text(data.firstName + ' ' + data.lastName);
-    $(adrField).text(adr + ', ' + plz + ' ' + city);
+    $(adrField).text("Teststraße 34, 10827 Berlin");
     $(mailField).text(data.mail);
     $(telField).text(data.tel);
     $(mobilField).text(data.mobil);
