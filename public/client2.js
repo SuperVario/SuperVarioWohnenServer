@@ -632,19 +632,19 @@ function addSBToList(data) {
 	var footer = document.createElement("div");
 	footer.className = "card-action";
 
-	// var a1 = document.createElement("a");
-	// a1.className = "delete-SBItem-button modal-trigger";
-	// a1.setAttribute("href", "#modal-delete-SB");
-	// a1.setAttribute("item-id", data.id);
-	// a1.innerText = "Löschen";
-    //
-	// var a2 = document.createElement("a");
-	// a2.className = "edit-SBItem-button";
-	// a2.setAttribute("href", "#");
-	// a2.innerText = "Bearbeiten";
-    //
-	// footer.appendChild(a1);
-	// footer.appendChild(a2);
+	var a1 = document.createElement("a");
+	a1.className = "delete-SBItem-button modal-trigger";
+	a1.setAttribute("href", "#modal-delete-SB");
+	a1.setAttribute("item-id", data.id);
+	a1.innerText = "Löschen";
+
+	var a2 = document.createElement("a");
+	a2.className = "edit-SBItem-button";
+	a2.setAttribute("href", "#");
+	a2.innerText = "Bearbeiten";
+
+	footer.appendChild(a1);
+	footer.appendChild(a2);
 
 	card_content.appendChild(ul);
 	card_blue.appendChild(card_content);
