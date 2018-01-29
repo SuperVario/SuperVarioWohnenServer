@@ -170,10 +170,15 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
-      	if (request.status == 200) {
-        	console.info(request.responseText);
-          	var data = JSON.parse(request.responseText);
-          	addSBToList(data);
+        if (request.status == 201) {
+            console.info(request.responseText);
+            var data = JSON.parse(request.responseText);
+            //addSBToList(data);
+            updateNavBar();
+            clearBeforeLoad();
+            addActionButton("addSB");
+            addRowForDynamicContent();
+            loadAllItems(schwarzesBrett);
       	} else {
         	console.error(request.statusText, request.responseText);        	
       	}
