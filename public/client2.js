@@ -185,7 +185,8 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
 		erstellDatumFormated: erstellDatumFormated,
 		erstellZeit: erstellZeit,
 		verfallsDatum: verfallsDatum,
-		nachricht: nachricht
+		nachricht: nachricht,
+        objectId: objectId
    	};
    	request.send(JSON.stringify(newItem));
 }
