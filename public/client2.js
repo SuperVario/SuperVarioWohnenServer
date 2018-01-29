@@ -170,22 +170,28 @@ function addSchwarzesBrettNachricht(titel, verfasser, erstellDatumISO, erstellDa
    	request.setRequestHeader("Content-type","application/json");
     request.setRequestHeader("session",getSessionId());
     request.addEventListener('load', function(event) {
-      	if (request.status == 200) {
-        	console.info(request.responseText);
-          	var data = JSON.parse(request.responseText);
-          	addSBToList(data);
+        if (request.status == 201) {
+            console.info(request.responseText);
+            var data = JSON.parse(request.responseText);
+            //addSBToList(data);
+            updateNavBar();
+            clearBeforeLoad();
+            addActionButton("addSB");
+            addRowForDynamicContent();
+            loadAllItems(schwarzesBrett);
       	} else {
         	console.error(request.statusText, request.responseText);        	
       	}
    	});
    	var newItem = { 
-		titel: titel,
+		title: titel,
 		verfasser: verfasser,
 		erstellDatumISO: erstellDatumISO,
 		erstellDatumFormated: erstellDatumFormated,
 		erstellZeit: erstellZeit,
 		verfallsDatum: verfallsDatum,
-		nachricht: nachricht
+		message: nachricht,
+        objectId: objectId
    	};
    	request.send(JSON.stringify(newItem));
 }
@@ -631,19 +637,19 @@ function addSBToList(data) {
 	var footer = document.createElement("div");
 	footer.className = "card-action";
 
-	// var a1 = document.createElement("a");
-	// a1.className = "delete-SBItem-button modal-trigger";
-	// a1.setAttribute("href", "#modal-delete-SB");
-	// a1.setAttribute("item-id", data.id);
-	// a1.innerText = "Löschen";
-    //
-	// var a2 = document.createElement("a");
-	// a2.className = "edit-SBItem-button";
-	// a2.setAttribute("href", "#");
-	// a2.innerText = "Bearbeiten";
-    //
-	// footer.appendChild(a1);
-	// footer.appendChild(a2);
+	var a1 = document.createElement("a");
+	a1.className = "delete-SBItem-button modal-trigger";
+	a1.setAttribute("href", "#modal-delete-SB");
+	a1.setAttribute("item-id", data.id);
+	a1.innerText = "Löschen";
+
+	var a2 = document.createElement("a");
+	a2.className = "edit-SBItem-button";
+	a2.setAttribute("href", "#");
+	a2.innerText = "Bearbeiten";
+
+	footer.appendChild(a1);
+	footer.appendChild(a2);
 
 	card_content.appendChild(ul);
 	card_blue.appendChild(card_content);
