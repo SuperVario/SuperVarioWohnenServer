@@ -36,7 +36,7 @@ struct Management: QueryRowResultType, QueryParameterDictionaryType {
             
             openings_weekdays: r <| "openings_weekdays",
             openings_weekends: r <| "openings_weekends",
-            website: r <| "website"
+            website: r.getValueNullable(forField: "website")
             
         )
     }
