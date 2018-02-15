@@ -18,6 +18,9 @@ struct Management: QueryRowResultType, QueryParameterDictionaryType {
     
     var telefon: String
     var mail: String
+    var openings_weekdays: String
+    var openings_weekends: String
+    var website: String
     
     static func decodeRow(r: QueryRowResult) throws -> Management {
         return try Management(
@@ -29,7 +32,12 @@ struct Management: QueryRowResultType, QueryParameterDictionaryType {
             postcode: r <| "postcode",
             
             telefon: r <| "telefon",
-            mail: r <| "mail"
+            mail: r <| "mail",
+            
+            openings_weekdays: r <| "openings_weekdays",
+            openings_weekends: r <| "openings_weekends",
+            website: r <| "website"
+            
         )
     }
     
@@ -42,7 +50,11 @@ struct Management: QueryRowResultType, QueryParameterDictionaryType {
             "postcode": postcode,
             
             "telefon": telefon,
-            "mail": mail
+            "mail": mail,
+            
+            "openings_weekdays": openings_weekdays,
+            "openings_weekends": openings_weekends,
+            "website": website
         ])
     }
 }
