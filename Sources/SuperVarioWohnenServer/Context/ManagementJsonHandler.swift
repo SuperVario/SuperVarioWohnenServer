@@ -19,10 +19,10 @@ extension Management{
             "place": place,
             "postcode": postcode,
             "telefon": telefon,
-            "mail": mail ?? nil,
-            "openings_weekdays": openings_weekdays ?? nil,
-            "openings_weekends": openings_weekends ?? nil,
-            "website": website ?? nil
+            "mail": mail ?? "",
+            "openings_weekdays": openings_weekdays ?? "",
+            "openings_weekends": openings_weekends ?? "",
+            "website": website ?? ""
             
             ])
         return json
@@ -33,6 +33,7 @@ extension Management{
         let o1 = json["openings_weekdays"].string
         let o2 = json["openings_weekends"].string
         let website = json["website"].string
+        print(website)
         return Management(
             id: json["id"].intValue,
             name: json["name"].stringValue,
