@@ -11,16 +11,6 @@ import MySQL
 
 extension Management{
     func toJson(connection: ConnectionPool) -> JSON {
-        let documents = Document.getDocuments(tenantId: id, connection: connection)
-        var documentJsonArray = [[String: Any]]()
-        
-        for document in documents {
-            documentJsonArray.append([
-                "id" : document.id,
-                "name" : document.name,
-                "folder": document.folder
-                ])
-        }
         
         let json = JSON([
             "id": id,

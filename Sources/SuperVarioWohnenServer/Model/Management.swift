@@ -17,10 +17,10 @@ struct Management: QueryRowResultType, QueryParameterDictionaryType {
     var postcode: String
     
     var telefon: String
-    var mail: String
-    var openings_weekdays: String
-    var openings_weekends: String
-    var website: String
+    var mail: String?
+    var openings_weekdays: String?
+    var openings_weekends: String?
+    var website: String?
     
     static func decodeRow(r: QueryRowResult) throws -> Management {
         return try Management(
