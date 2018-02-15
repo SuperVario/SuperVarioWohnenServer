@@ -19,16 +19,20 @@ extension Management{
             "place": place,
             "postcode": postcode,
             "telefon": telefon,
-            "mail": mail,
-            "openings_weekdays": openings_weekdays,
-            "openings_weekends": openings_weekends,
-            "website": website
+            "mail": mail ?? nil,
+            "openings_weekdays": openings_weekdays ?? nil,
+            "openings_weekends": openings_weekends ?? nil,
+            "website": website ?? nil
             
             ])
         return json
     }
     
     static func fromJson(json: JSON) -> Management {
+        let mail = json["mail"].string
+        let o1 = json["openings_weekdays"].string
+        let o2 = json["openings_weekends"].string
+        let website = json["website"].string
         return Management(
             id: json["id"].intValue,
             name: json["name"].stringValue,
@@ -36,10 +40,10 @@ extension Management{
             place: json["place"].stringValue,
             postcode: json["postcode"].stringValue,
             telefon: json["telefon"].stringValue,
-            mail: json["mail"].string,
-            openings_weekdays: json["openings_weekdays"].string,
-            openings_weekends: json["openings_weekends"].string,
-            website: json["website"].string
+            mail: mail,
+            openings_weekdays: o1,
+            openings_weekends: o2,
+            website: website
         )
     }
 }
