@@ -30,7 +30,9 @@ extension Management{
             "postcode": postcode,
             "telefon": telefon,
             "mail": mail,
-           
+            "openings_weekdays": openings_weekdays,
+            "openings_weekends": openings_weekends,
+            "website": website
             
             ])
         return json
@@ -44,7 +46,10 @@ extension Management{
             place: json["place"].stringValue,
             postcode: json["postcode"].stringValue,
             telefon: json["telefon"].stringValue,
-            mail: json["mail"].stringValue
+            mail: json["mail"].stringValue,
+            openings_weekdays: json["openings_weekdays"].stringValue,
+            openings_weekends: json["openings_weekends"].stringValue,
+            website: json["website"].stringValue
         )
     }
 }
